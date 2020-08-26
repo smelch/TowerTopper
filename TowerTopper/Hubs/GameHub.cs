@@ -26,5 +26,8 @@ namespace TowerTopper.Hubs
 
         public Task SyncRoomData() =>
             _commandBroker.Execute(new SyncRoomData() { PlayerId = Context.ConnectionId });
+
+        public Task PickCharacter(string roomId, string character) =>
+            _commandBroker.Execute(new PickCharacter() { RoomId = roomId, Character = character, PlayerId = Context.ConnectionId });
     }
 }

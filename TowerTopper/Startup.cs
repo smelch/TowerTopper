@@ -36,6 +36,14 @@ namespace TowerTopper
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.AllowAnyMethod().AllowAnyHeader()
+                            .AllowAnyOrigin()
+                            .AllowCredentials();
+                }));
+
             services.AddSignalR();
             services.AddScoped<IEventHub, Mediator>();
             services.AddScoped<ICommandBroker, Mediator>();
@@ -61,6 +69,7 @@ namespace TowerTopper
                 app.UseHsts();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
