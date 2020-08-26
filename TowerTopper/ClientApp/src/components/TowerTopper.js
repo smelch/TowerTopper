@@ -12,7 +12,7 @@ class TowerTopper extends Component {
     }
 
     roomJoined = (_) => {
-        this.setState({ inRoom: true });
+        this.setState({ inRoom: true, roomCode: _.roomCode });
     }
 
     render() {
@@ -20,7 +20,7 @@ class TowerTopper extends Component {
             <GameConnection>
                 {connection => {
                     if (this.state.inRoom) {
-                        return (<GameScreen connection={connection} />);
+                        return (<GameScreen connection={connection} roomCode={this.state.roomCode} />);
                     }
                     return (<GameJoiner connection={connection} onJoin={this.roomJoined} />);
                 }}

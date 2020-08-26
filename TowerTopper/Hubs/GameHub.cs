@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
+using TowerTopper.Domain.Players;
 
 namespace TowerTopper.Hubs
 {
@@ -22,5 +23,8 @@ namespace TowerTopper.Hubs
 
         public Task JoinGame(string userName, string roomCode) =>
             _commandBroker.Execute(new JoinGame() { UserName = userName, RoomCode = roomCode });
+
+        public Task SyncRoomData() =>
+            _commandBroker.Execute(new SyncRoomData() { PlayerId = Context.ConnectionId });
     }
 }

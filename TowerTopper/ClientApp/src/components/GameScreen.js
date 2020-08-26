@@ -18,12 +18,15 @@ class GameScreen extends Component {
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }
 
+    gameStateUpdate = (message) => {
+
+    }
+
     componentDidMount = () => {
-        this.props.connection.on('RoomCreated', this.roomCreated);
+        this.props.connection.on("GameStateUpdate", this.gameStateUpdated);
     }
 
     componentWillUnmount = () => {
-        this.props.connection.off('RoomCreated', this.roomCreated);
         window.cancelAnimationFrame(this.animationFrame);
     }
 
@@ -38,14 +41,10 @@ class GameScreen extends Component {
 
     render() {
         if (this.state.imagesLoaded) {
-            return (
-                <canvas ref="canvas" width={800} height={480} />
-            );
-        } else {
-            return (
-                <ImageLoader images={this.imagesToLoad} onLoad={this.onImagesLoaded} />
-            );
+            return (<canvas ref="canvas" width={800} height={480} />);
         }
+
+        return (<ImageLoader images={this.imagesToLoad} onLoad={this.onImagesLoaded} />);
     }
 }
 
