@@ -13,7 +13,7 @@ class GameConnection extends Component {
 
     componentDidMount = () => {
         const hubConnection = new HubConnectionBuilder()
-            .withUrl("/gameHub")
+            .withUrl("https://towertopper.azurewebsites.net/gameHub")
             .configureLogging(LogLevel.Information)
             .build();
 

@@ -40,8 +40,7 @@ namespace TowerTopper
                 builder =>
                 {
                     builder.AllowAnyMethod().AllowAnyHeader()
-                            .AllowAnyOrigin()
-                            .AllowCredentials();
+                            .AllowAnyOrigin();
                 }));
 
             services.AddSignalR();
@@ -69,7 +68,6 @@ namespace TowerTopper
                 app.UseHsts();
             }
 
-            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -94,6 +92,8 @@ namespace TowerTopper
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            app.UseCors("CorsPolicy");
         }
     }
 }
