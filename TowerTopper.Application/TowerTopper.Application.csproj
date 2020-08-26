@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TowerTopper.Application.Messages\TowerTopper.Application.Messages.csproj" />
+    <ProjectReference Include="..\TowerTopper.Domain\TowerTopper.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

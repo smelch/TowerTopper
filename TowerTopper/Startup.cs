@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TowerTopper.Application.Mediator;
+using TowerTopper.Application.Messages.Commands;
+using TowerTopper.Application.Rooms;
+using TowerTopper.Domain.Rooms;
+using TowerTopper.Hubs;
+using TowerTopper.Infrastructure.InMemory;
+using TowerTopper.Infrastructure.InMemory.Rooms;
 
 namespace TowerTopper
 {
@@ -28,6 +35,16 @@ namespace TowerTopper
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSignalR();
+            services.AddScoped<IEventHub, Mediator>();
+            services.AddScoped<ICommandBroker, Mediator>();
+
+            services.AddScoped<ICommandHandler<CreateRoom>, RoomCreator>();
+            services.AddScoped<IEventHandler<RoomCreatedEvent>, GameHubNotifier>();
+
+            services.AddSingleton<IRoomStorage, RoomStorage>();
+            services.AddScoped<IPersistRooms, RoomRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +72,8 @@ namespace TowerTopper
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                
+                endpoints.MapHub<GameHub>("/gameHub");
             });
 
             app.UseSpa(spa =>
