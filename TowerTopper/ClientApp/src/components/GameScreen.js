@@ -41,10 +41,14 @@ class GameScreen extends Component {
 
     render() {
         if (this.state.imagesLoaded) {
-            return (<canvas ref="canvas" width={800} height={480} />);
+            return (
+                <canvas ref="canvas" width={800} height={480} />
+            );
         }
 
-        return (<ImageLoader images={this.imagesToLoad} onLoad={this.onImagesLoaded} />);
+        return (
+            <ImageLoader images={this.imagesToLoad} onLoad={this.onImagesLoaded} />
+        );
     }
 }
 
