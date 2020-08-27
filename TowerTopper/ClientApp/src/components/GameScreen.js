@@ -1,10 +1,14 @@
 ﻿import React, { Component } from 'react';
 import ImageLoader from './ImageLoader';
 import Background from '../assets/background.png';
+import SpriteDan from '../assets/sprite_dan.png';
+import SpriteMark from '../assets/sprite_mark.png';
 
 class GameScreen extends Component {
     imagesToLoad = {
-        background: Background
+        background: Background,
+        spritedan: SpriteDan,
+        spritemark: SpriteMark
     };
 
     constructor(props) {
@@ -32,9 +36,12 @@ class GameScreen extends Component {
 
     draw = () => {
         var ctx = this.refs.canvas.getContext('2d');
-        ctx.clearRect(0, 0, 800, 480);
+        ctx.clearRect(0, 0, 640, 360);
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(this.images.background, 0, 0, 800, 480);
+        ctx.drawImage(this.images.background, 0, 0, 640, 360);
+        
+        ctx.drawImage(this.images.spritedan, 0, 0, 200, 300);
+        ctx.drawImage(this.images.spritemark, 320, 0, 200, 300);
 
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }
@@ -42,7 +49,7 @@ class GameScreen extends Component {
     render() {
         if (this.state.imagesLoaded) {
             return (
-                <canvas ref="canvas" width={800} height={480} />
+                <canvas ref="canvas" width={640} height={360} />
             );
         }
 

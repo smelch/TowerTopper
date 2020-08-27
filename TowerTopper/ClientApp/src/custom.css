@@ -15,4 +15,7 @@ code {
 
 canvas {
   image-rendering: pixelated;
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
 }
