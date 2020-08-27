@@ -10,17 +10,22 @@ class AnimateObject extends GameObject {
         this.curState = "idle"
     };
 
-    addSpriteState(name, frameWidth, frameHeight, numFrames, scale, img) {
+    addSpriteState(name, frameWidth, frameHeight, numFrames, scale, img, post) {
         this.states[name] = {}
         this.states[name].frameWidth = frameWidth
         this.states[name].frameHeight = frameHeight
         this.states[name].numFrames = numFrames
         this.states[name].scale = scale
         this.states[name].img = img
+        this.states[name].post = post
     };
 
-    draw(ctx, x, y, xs, ys) {
-        //console.log((Date.now() - this.lastFrameUpdate))
+    changeState(name) {
+        this.curState = name
+        this.frameSteps = 0
+    }
+
+    draw(ctx, x, y, xs, ys, flip) {
         if ((Date.now() - this.lastFrameUpdate) / 20 > this.tickThresh) {
             this.frameSteps = (this.frameSteps + 1) % this.states[this.curState].numFrames
             this.lastFrameUpdate = Date.now()
@@ -35,6 +40,10 @@ class AnimateObject extends GameObject {
             y, 
             (this.states[this.curState].frameWidth * 0.5), 
             (this.states[this.curState].frameHeight * 0.5))
+                if (this.frameSteps == this.states[this.curState].numFrames - 1) {
+            this.curState = this.states[this.curState].post
+            this.frameSteps = 0
+        }
     };
 };
 
