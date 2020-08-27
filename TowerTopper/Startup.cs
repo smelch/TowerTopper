@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
+using TowerTopper.Application.Messages.Events;
 using TowerTopper.Application.Rooms;
 using TowerTopper.Domain.Rooms;
 using TowerTopper.Hubs;
@@ -51,9 +52,14 @@ namespace TowerTopper
 
             services.AddScoped<ICommandHandler<CreateRoom>, RoomCreator>();
             services.AddScoped<IFetchRoom, RoomFetcher>();
+            
             services.AddScoped<ICommandHandler<JoinRoom>, RoomJoiner>();
+            
             services.AddScoped<IEventHandler<RoomCreatedEvent>, GameHubNotifier>();
             services.AddScoped<IEventHandler<GuestJoinedRoomEvent>, GameHubNotifier>();
+            
+            services.AddScoped<ICommandHandler<SendRoomState>, RoomStateSender>();
+            services.AddScoped<IEventHandler<RoomStateGenerated>, GameHubNotifier>();
 
             services.AddSingleton<IRoomStorage, RoomStorage>();
             services.AddScoped<IPersistRooms, RoomRepository>();

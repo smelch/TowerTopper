@@ -2,7 +2,7 @@ import GameObject from './GameObject'
 
 class AnimateObject extends GameObject {
     constructor(fps) {
-        super();
+        super({ drawable: true });
         this.lastFrameUpdate = Date.now()
         this.tickThresh = 60/fps
         this.frameSteps = 0
@@ -20,7 +20,7 @@ class AnimateObject extends GameObject {
     };
 
     draw(ctx, x, y, xs, ys) {
-        console.log((Date.now() - this.lastFrameUpdate))
+        //console.log((Date.now() - this.lastFrameUpdate))
         if ((Date.now() - this.lastFrameUpdate) / 20 > this.tickThresh) {
             this.frameSteps = (this.frameSteps + 1) % this.states[this.curState].numFrames
             this.lastFrameUpdate = Date.now()

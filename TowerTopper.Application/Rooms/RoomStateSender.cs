@@ -28,7 +28,7 @@ namespace TowerTopper.Application.Rooms
                 await _eventHub.Dispatch(new RoomStateGenerated()
                 {
                     MyPlayerId = command.PlayerId,
-                    RoomCode = room.RoomId.ToString(),
+                    RoomCode = room.RoomCode.ToString(),
                     Guest = Convert(room.Guest),
                     Host = Convert(room.Host)
                 });
@@ -37,11 +37,16 @@ namespace TowerTopper.Application.Rooms
 
         private RoomStateGenerated.RoomPlayer Convert(Room.RoomPlayer player)
         {
+            if (player == null)
+            {
+                return null;
+            }
+
             return new RoomStateGenerated.RoomPlayer()
             {
                 PlayerId = player.PlayerId.ToString(),
                 UserName = player.UserName,
-                CharacterKey = player.SelectedCharacter.ToString()
+                CharacterKey = player.SelectedCharacter?.ToString()
             };
         }
     }

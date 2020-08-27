@@ -6,6 +6,8 @@ import AnimateObject from '../noreact/AnimateObject';
 import SpriteDan from '../assets/sprite_dan.png';
 import SpriteErnie from '../assets/sprite_ernie_idle.png';
 
+import GameHeader from '../noreact/GameHeader';
+
 class GameScreen extends Component {
     imagesToLoad = {
         background: Background,
@@ -23,6 +25,7 @@ class GameScreen extends Component {
     onImagesLoaded = (images) => {
         this.images = images;
         this.setState({ imagesLoaded: true });
+        this.lastTickStart = Date.now();
         this.animationFrame = window.requestAnimationFrame(this.tick);
         
         // sprite placement variables
@@ -43,6 +46,7 @@ class GameScreen extends Component {
     }
 
     roomStateGenerated = (message) => {
+        console.log(message);
         this.roomState = message;
     }
 
@@ -51,6 +55,8 @@ class GameScreen extends Component {
     }
 
     componentDidMount = () => {
+        this.gameObjects.push(new GameHeader({ position: { x: 0, y: 0 }, stateSource: this }));
+
         this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
         this.props.connection.on("GuestJoinedRoom", this.guestJoined);
         this.props.connection
@@ -74,8 +80,11 @@ class GameScreen extends Component {
         }
 
         this.gameObjects = this.gameObjects.sort((a, b) => a.drawOrder === b.drawOrder ? 0 : (a.drawOrder > b.drawOrder ? 1 : -1))
-
         const ctx = this.refs.canvas.getContext('2d');
+        ctx.clearRect(0, 0, 640, 360);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(this.images.background, 0, 0, 640, 360);
+
         for (const i in this.gameObjects) {
             const gameObject = this.gameObjects[i];
             if (gameObject.drawable) {
@@ -84,30 +93,15 @@ class GameScreen extends Component {
         }
         this.lastTickStart = tickStartTime;
 
-        this.draw();
+        this.draw(ctx);
     }
 
-    draw = () => {
-        var ctx = this.refs.canvas.getContext('2d');
-        ctx.clearRect(0, 0, 640, 360);
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(this.images.background, 0, 0, 640, 360);
-
-        ctx.font = "16pt sans-serif"
-        ctx.fillText("ROOM CODE: " + this.props.roomCode, 20, 20);
-        
-        if (this.guest != null)
-        {
-            ctx.save();
-            ctx.fillStyle = (this.guest.playerId == this.props.playerId) ? "#00DD00" : "#AA6600";
-            ctx.fillText(this.guest.userName, 500, 40);
-            ctx.restore();
-        }
+    draw = (ctx) => {
         
         this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
         this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
 
-        this.animationFrame = window.requestAnimationFrame(this.draw);
+        this.animationFrame = window.requestAnimationFrame(this.tick);
     }
 
     render() {

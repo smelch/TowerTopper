@@ -3,8 +3,12 @@ class GameObject {
     updateable;
 
     constructor(props) {
-        this.drawable = props.drawable;
-        this.updateable = props.updateable;
+        if (props) {
+            this.drawable = props.drawable;
+            this.updateable = props.updateable;
+            this.updateOrder = props.updateOrder;
+            this.drawOrder = props.drawOrder;
+        }
     }
 }
 
