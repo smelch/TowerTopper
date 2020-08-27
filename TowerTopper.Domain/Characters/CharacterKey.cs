@@ -22,9 +22,15 @@ namespace TowerTopper.Domain.Characters
             {
                 case "ernie":
                     return Ernie;
+                case "dan":
+                    return Dan;
+                case "mark":
+                    return Mark;
             }
 
             throw new ArgumentException("Cannot parse key", nameof(key));
         }
+
+
     }
 }

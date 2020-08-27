@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TowerTopper.Domain.Characters;
+using TowerTopper.Domain.Games;
 using TowerTopper.Domain.Players;
 
 namespace TowerTopper.Domain.Rooms
@@ -40,15 +42,26 @@ namespace TowerTopper.Domain.Rooms
             }
         }
 
+        public void StartGame(PlayerId playerId)
+        {
+            AddDomainEvent(new GameStartedEvent(RoomId, Host, Guest));
+        }
+
         public class RoomPlayer
         {
             public PlayerId PlayerId { get; }
             public string UserName { get; }
+            public CharacterKey SelectedCharacter { get; private set; }
 
             public RoomPlayer(PlayerId playerId, string userName)
             {
                 PlayerId = playerId;
                 UserName = userName;
+            }
+
+            public void SelectCharacter(CharacterKey key)
+            {
+                SelectedCharacter = key;
             }
         }
     }
