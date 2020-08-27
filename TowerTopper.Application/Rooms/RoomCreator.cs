@@ -24,7 +24,7 @@ namespace TowerTopper.Application.Rooms
         {
             Room room;
             do {
-                room = Room.CreateRoom(new PlayerId(command.HostPlayerId));
+                room = Room.CreateRoom(new PlayerId(command.HostPlayerId), command.HostPlayerName);
             }
             while (!(await _persister.TryStore(room)));
 

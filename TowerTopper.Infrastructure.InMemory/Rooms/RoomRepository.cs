@@ -18,6 +18,11 @@ namespace TowerTopper.Infrastructure.InMemory.Rooms
 
         public Task<bool> TryStore(Room room)
         {
+            if (_storage.RoomIdIndex.ContainsKey(room.RoomId))
+            {
+                return Task.FromResult(true);
+            }
+
             return Task.FromResult(_storage.Add(room));
         }
     }

@@ -18,12 +18,20 @@ class GameScreen extends Component {
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }
 
+    guestJoined = (message) => {
+        this.guest = { playerId: message.playerId, userName: message.userName };
+    }
+
     gameStateUpdate = (message) => {
 
     }
 
     componentDidMount = () => {
-        this.props.connection.on("GameStateUpdate", this.gameStateUpdated);
+        this.props.connection.on("RoomState", this.gameStateUpdated);
+        this.props.connection.on("GuestJoinedRoom", this.guestJoined);
+        this.props.connection
+            .send("SendRoomState", this.props.RoomId)
+            .catch(err => console.error(err));
     }
 
     componentWillUnmount = () => {
@@ -35,6 +43,17 @@ class GameScreen extends Component {
         ctx.clearRect(0, 0, 800, 480);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(this.images.background, 0, 0, 800, 480);
+        ctx.font = "16pt sans-serif"
+        ctx.fillText("ROOM CODE: " + this.props.roomCode, 20, 20);
+
+        
+        if (this.guest != null)
+        {
+            ctx.save();
+            ctx.fillStyle = (this.guest.playerId == this.props.playerId) ? "#00DD00" : "#AA6600";
+            ctx.fillText(this.guest.userName, 700, 40);
+            ctx.restore();
+        }
 
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }

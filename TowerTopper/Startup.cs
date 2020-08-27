@@ -50,7 +50,10 @@ namespace TowerTopper
             services.AddScoped<ICommandBroker, Mediator>();
 
             services.AddScoped<ICommandHandler<CreateRoom>, RoomCreator>();
+            services.AddScoped<IFetchRoom, RoomFetcher>();
+            services.AddScoped<ICommandHandler<JoinRoom>, RoomJoiner>();
             services.AddScoped<IEventHandler<RoomCreatedEvent>, GameHubNotifier>();
+            services.AddScoped<IEventHandler<GuestJoinedRoomEvent>, GameHubNotifier>();
 
             services.AddSingleton<IRoomStorage, RoomStorage>();
             services.AddScoped<IPersistRooms, RoomRepository>();
