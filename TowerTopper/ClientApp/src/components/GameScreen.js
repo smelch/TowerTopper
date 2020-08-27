@@ -23,14 +23,14 @@ class GameScreen extends Component {
     }
 
     gameStateUpdate = (message) => {
-
+        this.roomState = message;
     }
 
     componentDidMount = () => {
         this.props.connection.on("RoomState", this.gameStateUpdated);
         this.props.connection.on("GuestJoinedRoom", this.guestJoined);
         this.props.connection
-            .send("SendRoomState", this.props.RoomId)
+            .send("SendRoomState", this.props.roomId)
             .catch(err => console.error(err));
     }
 
