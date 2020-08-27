@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-var Background = require('../assets/background.png');
 
 class ImageLoader extends Component {
     constructor(props) {
@@ -19,10 +18,10 @@ class ImageLoader extends Component {
         console.log(this.images);
     }
 
-    loadImage = () => {
+    loadImage = (src) => {
         const img = new Image();
         img.onload = this.imageLoaded;
-        img.src = Background;
+        img.src = src;
         return img;
     }
 

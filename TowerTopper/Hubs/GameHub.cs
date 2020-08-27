@@ -22,7 +22,7 @@ namespace TowerTopper.Hubs
             _commandBroker.Execute(new CreateRoom() { HostPlayerName = userName, HostPlayerId = Context.ConnectionId });
 
         public Task JoinGame(string userName, string roomCode) =>
-            _commandBroker.Execute(new JoinGame() { UserName = userName, RoomCode = roomCode });
+            _commandBroker.Execute(new JoinRoom() { UserName = userName, RoomCode = roomCode, PlayerId = Context.ConnectionId });
 
         public Task SyncRoomData() =>
             _commandBroker.Execute(new SyncRoomData() { PlayerId = Context.ConnectionId });
