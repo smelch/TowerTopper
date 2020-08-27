@@ -2,15 +2,25 @@
 import ImageLoader from './ImageLoader';
 import Background from '../assets/background.png';
 
-import AnimateObject from '../noreact/AnimateObject';
-import SpriteDan from '../assets/sprite_dan.png';
-import SpriteErnie from '../assets/sprite_ernie_idle.png';
+import CharacterObject from './gameobjects/CharacterObject';
+
+import SpriteErnieIdle from '../assets/sprite_ernie_idle.png';
+import SpriteErnieToss from '../assets/sprite_ernie_toss.png';
+import SpriteErnieHit from '../assets/sprite_ernie_hit.png';
+
+import SpriteDanIdle from '../assets/sprite_dan_idle.png';
+import SpriteDanToss from '../assets/sprite_dan_toss.png';
+import SpriteDanHit from '../assets/sprite_dan_hit.png';
 
 class GameScreen extends Component {
     imagesToLoad = {
         background: Background,
-        spritedan: SpriteDan,
-        spriteernie: SpriteErnie
+        spriteDanIdle: SpriteDanIdle,
+        spriteDanToss: SpriteDanToss,
+        spriteDanHit: SpriteDanHit,
+        spriteErnieIdle: SpriteErnieIdle,
+        spriteErnieToss: SpriteErnieToss,
+        spriteErnieHit: SpriteErnieHit
     };
 
     constructor(props) {
@@ -28,12 +38,8 @@ class GameScreen extends Component {
         this.right_sprite_x = 490;
         this.sprite_y = 205;
 
-        // player definition
-        this.p1 = new AnimateObject(10);
-        this.p1.addSpriteState('idle', 200, 300, 8, 0.5, this.images.spriteernie)
-
-        this.p2 = new AnimateObject(10);
-        this.p2.addSpriteState('idle', 200, 300, 8, 0.5, this.images.spritedan)
+        this.p1 = new CharacterObject(this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit)
+        this.p2 = new CharacterObject(this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit)
     }
 
     guestJoined = (message) => {
@@ -54,6 +60,10 @@ class GameScreen extends Component {
 
     componentWillUnmount = () => {
         window.cancelAnimationFrame(this.animationFrame);
+    }
+
+    toss = () => {
+        this.p1.toss()
     }
 
     draw = () => {
@@ -85,6 +95,7 @@ class GameScreen extends Component {
                 <div>
                     <h2>Room Code: {this.props.roomCode}</h2>
                     <canvas ref="canvas" width={640} height={360} />
+                    <h2 onClick={this.toss}>Toss it!</h2>
                 </div>
             );
         }

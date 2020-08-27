@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-var Background = require('../assets/sprite_dan.png');
 
 class ImageLoader extends Component {
     constructor(props) {
