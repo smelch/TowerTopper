@@ -13,6 +13,10 @@ code {
   border-color: #1861ac;
 }
 
+h2 {
+  text-align: center;
+}
+
 canvas {
   image-rendering: pixelated;
   margin-right: auto;

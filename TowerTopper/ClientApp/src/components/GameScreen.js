@@ -20,6 +20,12 @@ class GameScreen extends Component {
         this.images = images;
         this.setState({ imagesLoaded: true });
         this.animationFrame = window.requestAnimationFrame(this.draw);
+        
+        this.left_sprite_x = 30;
+        this.right_sprite_x = 490;
+        this.sprite_y = 205;
+        this.frame_tick = 0;
+        this.frame_tick_small = 0;
     }
 
     gameStateUpdate = (message) => {
@@ -40,8 +46,16 @@ class GameScreen extends Component {
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(this.images.background, 0, 0, 640, 360);
         
-        ctx.drawImage(this.images.spritedan, 0, 0, 200, 300);
-        ctx.drawImage(this.images.spritemark, 320, 0, 200, 300);
+        ctx.drawImage(this.images.spritedan, (200 * this.frame_tick), 0, 200, 300, this.left_sprite_x, this.sprite_y, 100, 150);
+        ctx.drawImage(this.images.spritemark, (208 * this.frame_tick), 0, 208, 300, this.right_sprite_x, this.sprite_y, 104, 150);
+
+        // sets the fps
+        this.frame_tick_small = (this.frame_tick_small + 1) % 10;
+
+        // update on fps tick
+        if (this.frame_tick_small === 9) {
+            this.frame_tick = (this.frame_tick + 1) % 4;
+        };
 
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }
@@ -49,7 +63,10 @@ class GameScreen extends Component {
     render() {
         if (this.state.imagesLoaded) {
             return (
-                <canvas ref="canvas" width={640} height={360} />
+                <div>
+                    <h2>Room Code: {this.props.roomCode}</h2>
+                    <canvas ref="canvas" width={640} height={360} />
+                </div>
             );
         }
 
