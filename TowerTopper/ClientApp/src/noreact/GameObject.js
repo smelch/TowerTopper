@@ -1,6 +1,10 @@
 class GameObject {
-    constructor(drawable) {
-        this.drawable = drawable;
+    drawable;
+    updateable;
+
+    constructor(props) {
+        this.drawable = props.drawable;
+        this.updateable = props.updateable;
     }
 }
 
