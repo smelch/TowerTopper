@@ -23,6 +23,8 @@ class GameScreen extends Component {
         spriteErnieHit: SpriteErnieHit
     };
 
+    gameObjects = [];
+
     constructor(props) {
         super(props);
         this.state = { imagesLoaded: false };
@@ -31,7 +33,7 @@ class GameScreen extends Component {
     onImagesLoaded = (images) => {
         this.images = images;
         this.setState({ imagesLoaded: true });
-        this.animationFrame = window.requestAnimationFrame(this.draw);
+        this.animationFrame = window.requestAnimationFrame(this.tick);
         
         // sprite placement variables
         this.left_sprite_x = 30;
@@ -50,6 +52,10 @@ class GameScreen extends Component {
         this.roomState = message;
     }
 
+    getRoomState = () => {
+        return this.roomState;
+    }
+
     componentDidMount = () => {
         this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
         this.props.connection.on("GuestJoinedRoom", this.guestJoined);
@@ -64,6 +70,30 @@ class GameScreen extends Component {
 
     toss = () => {
         this.p1.toss()
+
+    tick = () => {
+        const tickStartTime = Date.now();
+        const elapsedTime = this.lastTickStart - tickStartTime;
+        this.gameObjects = this.gameObjects.sort((a, b) => a.updateOrder === b.updateOrder ? 0 : (a.updateOrder > b.updateOrder ? 1 : -1));
+        for (const i in this.gameObjects) {
+            const gameObject = this.gameObjects[i];
+            if (gameObject.updateable) {
+                gameObject.update(elapsedTime);
+            }
+        }
+
+        this.gameObjects = this.gameObjects.sort((a, b) => a.drawOrder === b.drawOrder ? 0 : (a.drawOrder > b.drawOrder ? 1 : -1))
+
+        const ctx = this.refs.canvas.getContext('2d');
+        for (const i in this.gameObjects) {
+            const gameObject = this.gameObjects[i];
+            if (gameObject.drawable) {
+                gameObject.draw(elapsedTime, ctx);
+            }
+        }
+        this.lastTickStart = tickStartTime;
+
+        this.draw();
     }
 
     draw = () => {
