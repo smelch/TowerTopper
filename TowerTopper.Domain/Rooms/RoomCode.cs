@@ -13,10 +13,17 @@ namespace TowerTopper.Domain.Rooms
             _value = value;
         }
 
-        public static RoomCode Parse(string value)
+        public static bool TryParse(string value, out RoomCode output, out string error)
         {
-            Validate(value);
-            return new RoomCode(value);
+            output = null;
+            if (IsInvalid(value, out error))
+            {
+                return false;
+            }
+
+            output = new RoomCode(value);
+
+            return true;
         }
 
         public static RoomCode NewRoomCode()
@@ -34,22 +41,28 @@ namespace TowerTopper.Domain.Rooms
             return (char)_random.Next(65, 90);
         }
 
-        private static void Validate(string value)
+        private static bool IsInvalid(string value, out string error)
         {
             if (String.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Value cannot be null or whitespace", nameof(value));
+                error = "Value cannot be null or whitespace";
+                return true;
             }
 
             if(value.Length != 4)
             {
-                throw new ArgumentException("Value must be exactly four characters", nameof(value));
+                error = "Value must be exactly four characters";
+                return true;
             }
 
             if(value.Any(x => !char.IsLetter(x)))
             {
-                throw new ArgumentException("Value contain only letters", nameof(value));
+                error = "Value must contain only letters";
+                return true;
             }
+
+            error = null;
+            return false;
         }
 
         public static bool operator ==(RoomCode a, RoomCode b)

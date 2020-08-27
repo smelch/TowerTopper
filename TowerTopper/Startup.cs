@@ -27,6 +27,13 @@ namespace TowerTopper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.AllowAnyMethod().AllowAnyHeader()
+                            .WithOrigins("http://localhost:3000", "https://localhost:44365")
+                            .AllowCredentials();
+                }));
 
             services.AddControllersWithViews();
 
@@ -36,12 +43,7 @@ namespace TowerTopper
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
-                builder =>
-                {
-                    builder.AllowAnyMethod().AllowAnyHeader()
-                            .AllowAnyOrigin();
-                }));
+
 
             services.AddSignalR();
             services.AddScoped<IEventHub, Mediator>();
@@ -57,6 +59,8 @@ namespace TowerTopper
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -92,8 +96,6 @@ namespace TowerTopper
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-
-            app.UseCors("CorsPolicy");
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿import React, { Component } from 'react';
+<<<<<<< HEAD
 var Background = require('../assets/sprite_dan.png');
+=======
+>>>>>>> d1e2ea15f1b25d36f0c2bbe29a54f38aceda0c72
 
 class ImageLoader extends Component {
     constructor(props) {
@@ -19,10 +22,10 @@ class ImageLoader extends Component {
         console.log(this.images);
     }
 
-    loadImage = () => {
+    loadImage = (src) => {
         const img = new Image();
         img.onload = this.imageLoaded;
-        img.src = Background;
+        img.src = src;
         return img;
     }
 
