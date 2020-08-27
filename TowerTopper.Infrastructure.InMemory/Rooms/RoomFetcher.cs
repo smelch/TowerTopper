@@ -21,5 +21,11 @@ namespace TowerTopper.Infrastructure.InMemory.Rooms
             _storage.RoomCodeIndex.TryGetValue(roomCode, out Room room);
             return Task.FromResult(room);
         }
+
+        public Task<Room> Fetch(RoomId roomId)
+        {
+            _storage.RoomIdIndex.TryGetValue(roomId, out Room room);
+            return Task.FromResult(room);
+        }
     }
 }

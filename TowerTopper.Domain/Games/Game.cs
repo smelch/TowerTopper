@@ -22,5 +22,10 @@ namespace TowerTopper.Domain.Games
 
         //    return game;
         //}
+
+        public void Tick()
+        {
+
+        }
     }
 }
