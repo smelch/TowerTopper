@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import ImageLoader from './ImageLoader';
 import Background from '../assets/background.png';
+
+import AnimateObject from '../noreact/AnimateObject';
 import SpriteDan from '../assets/sprite_dan.png';
 import SpriteErnie from '../assets/sprite_ernie_idle.png';
 
@@ -26,6 +28,12 @@ class GameScreen extends Component {
         this.sprite_y = 205;
         this.frame_tick = 0;
         this.frame_tick_small = 0;
+
+        this.p1 = new AnimateObject(10);
+        this.p1.addSpriteState('idle', 200, 300, 8, 0.5, this.images.spriteernie)
+
+        this.p2 = new AnimateObject(10);
+        this.p2.addSpriteState('idle', 200, 300, 8, 0.5, this.images.spritedan)
     }
 
     guestJoined = (message) => {
@@ -65,9 +73,8 @@ class GameScreen extends Component {
             ctx.restore();
         }
         
-        ctx.drawImage(this.images.spritedan, (200 * this.frame_tick), 0, 200, 300, this.left_sprite_x, this.sprite_y, 100, 150);
-
-        ctx.drawImage(this.images.spriteernie, (200 * this.frame_tick), 0, 200, 300, this.right_sprite_x, this.sprite_y, 100, 150);
+        this.p1.draw(ctx, this.frame_tick, this.left_sprite_x, this.sprite_y, 100, 150)
+        this.p2.draw(ctx, this.frame_tick, this.right_sprite_x, this.sprite_y, 100, 150)
 
         // sets the fps
         this.frame_tick_small = (this.frame_tick_small + 1) % 10;
