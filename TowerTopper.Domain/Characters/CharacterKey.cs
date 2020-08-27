@@ -31,6 +31,9 @@ namespace TowerTopper.Domain.Characters
             throw new ArgumentException("Cannot parse key", nameof(key));
         }
 
-
+        public override string ToString()
+        {
+            return _value;
+        }
     }
 }

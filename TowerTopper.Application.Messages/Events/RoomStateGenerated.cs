@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerTopper.Application.Messages.Events
 {
-    public class RoomDataSynced
+    public class RoomStateGenerated
     {
         public string MyPlayerId { get; set; }
         public string RoomCode { get; set; }
@@ -16,6 +16,7 @@ namespace TowerTopper.Application.Messages.Events
         {
             public string PlayerId { get; set; }
             public string UserName { get; set; }
+            public string CharacterKey { get; set; }
         }
     }
 }

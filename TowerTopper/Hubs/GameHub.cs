@@ -24,13 +24,13 @@ namespace TowerTopper.Hubs
         public Task JoinRoom(string userName, string roomCode) =>
             _commandBroker.Execute(new JoinRoom() { UserName = userName, RoomCode = roomCode, PlayerId = Context.ConnectionId });
 
-        public Task SyncRoomData() =>
-            _commandBroker.Execute(new SyncRoomData() { PlayerId = Context.ConnectionId });
-
         public Task PickCharacter(string roomId, string character) =>
             _commandBroker.Execute(new PickCharacter() { RoomId = roomId, Character = character, PlayerId = Context.ConnectionId });
 
         public Task StartGame(string roomId) =>
             _commandBroker.Execute(new StartGame() { RoomId = roomId, PlayerId = Context.ConnectionId });
+
+        public Task SendRoomState(string roomId) =>
+            _commandBroker.Execute(new SendRoomState() { RoomId = roomId, PlayerId = Context.ConnectionId });
     }
 }

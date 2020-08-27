@@ -32,12 +32,12 @@ class GameScreen extends Component {
         this.guest = { playerId: message.playerId, userName: message.userName };
     }
 
-    gameStateUpdate = (message) => {
+    roomStateGenerated = (message) => {
         this.roomState = message;
     }
 
     componentDidMount = () => {
-        this.props.connection.on("RoomState", this.gameStateUpdated);
+        this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
         this.props.connection.on("GuestJoinedRoom", this.guestJoined);
         this.props.connection
             .send("SendRoomState", this.props.roomId)
