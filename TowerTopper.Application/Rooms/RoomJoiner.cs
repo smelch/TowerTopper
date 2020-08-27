@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
 using TowerTopper.Application.Messages.Events;
+using TowerTopper.Domain.Players;
 using TowerTopper.Domain.Rooms;
 
 namespace TowerTopper.Application.Rooms
@@ -36,6 +37,11 @@ namespace TowerTopper.Application.Rooms
                         UserName = command.UserName,
                         Reason = "Room not found"
                     });
+                } else
+                {
+                    room.AddGuest(new PlayerId(command.PlayerId), command.UserName);
+                    await _persister.TryStore(room);
+                    await _eventHub.DispatchAll(room);
                 }
             }
             else

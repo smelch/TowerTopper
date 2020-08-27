@@ -10,7 +10,8 @@ using TowerTopper.Domain.Rooms;
 namespace TowerTopper.Hubs
 {
     public class GameHubNotifier :
-        IEventHandler<RoomCreatedEvent>
+        IEventHandler<RoomCreatedEvent>,
+        IEventHandler<GuestJoinedRoomEvent>
     {
         private readonly IHubContext<GameHub> _gameHubContext;
 
@@ -23,6 +24,12 @@ namespace TowerTopper.Hubs
         {
             await _gameHubContext.Groups.AddToGroupAsync(@event.HostPlayerId.ToString(), @event.RoomId.ToString());
             await _gameHubContext.Clients.Client(@event.HostPlayerId.ToString())?.SendAsync("RoomCreated", ApplicationEvent.FromDomainEvent(@event));
+        }
+
+        public async Task Handle(GuestJoinedRoomEvent @event)
+        {
+            await _gameHubContext.Groups.AddToGroupAsync(@event.PlayerId.ToString(), @event.RoomId.ToString());
+            await _gameHubContext.Clients.Group(@event.RoomId.ToString()).SendAsync("GuestJoinedRoom", ApplicationEvent.FromDomainEvent(@event));
         }
     }
 }

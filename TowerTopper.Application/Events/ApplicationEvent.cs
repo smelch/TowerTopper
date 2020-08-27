@@ -14,7 +14,17 @@ namespace TowerTopper.Application.Events
             {
                 HostPlayerId = domainEvent.HostPlayerId.ToString(),
                 RoomCode = domainEvent.RoomCode.ToString(),
-                RoomId = domainEvent.RoomId.ToString()
+                RoomId = domainEvent.RoomId.ToString(),
+            };
+        }
+
+        public static GuestJoinedRoom FromDomainEvent(GuestJoinedRoomEvent @event)
+        {
+            return new GuestJoinedRoom
+            {
+                RoomId = @event.RoomId.ToString(),
+                PlayerId = @event.PlayerId.ToString(),
+                UserName = @event.UserName
             };
         }
     }
