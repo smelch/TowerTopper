@@ -23,12 +23,12 @@ class GameScreen extends Component {
         this.setState({ imagesLoaded: true });
         this.animationFrame = window.requestAnimationFrame(this.draw);
         
+        // sprite placement variables
         this.left_sprite_x = 30;
         this.right_sprite_x = 490;
         this.sprite_y = 205;
-        this.frame_tick = 0;
-        this.frame_tick_small = 0;
 
+        // player definition
         this.p1 = new AnimateObject(10);
         this.p1.addSpriteState('idle', 200, 300, 8, 0.5, this.images.spriteernie)
 
@@ -73,16 +73,8 @@ class GameScreen extends Component {
             ctx.restore();
         }
         
-        this.p1.draw(ctx, this.frame_tick, this.left_sprite_x, this.sprite_y, 100, 150)
-        this.p2.draw(ctx, this.frame_tick, this.right_sprite_x, this.sprite_y, 100, 150)
-
-        // sets the fps
-        this.frame_tick_small = (this.frame_tick_small + 1) % 10;
-
-        // update on fps tick
-        if (this.frame_tick_small == 9) {
-            this.frame_tick = (this.frame_tick + 1) % 8;
-        };
+        this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
+        this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
 
         this.animationFrame = window.requestAnimationFrame(this.draw);
     }
