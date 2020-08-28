@@ -14,6 +14,11 @@ import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
 import SpriteDanWalk from '../assets/sprite_dan_walk.png';
 
+import SpriteMarkIdle from '../assets/sprite_mark_idle.png';
+import SpriteMarkToss from '../assets/sprite_mark_toss.png';
+import SpriteMarkHit from '../assets/sprite_mark_hit.png';
+import SpriteMarkWalk from '../assets/sprite_mark_walk.png';
+
 import BackgroundMusic from '../assets/music/mus_ingame.ogg';
 
 import ErnieThrow2 from '../assets/sounds/eff_ernie_throw_2.ogg';
@@ -36,7 +41,11 @@ class GameScreen extends Component {
             spriteErnieIdle: SpriteErnieIdle,
             spriteErnieToss: SpriteErnieToss,
             spriteErnieHit: SpriteErnieHit,
-            spriteErnieWalk: SpriteErnieWalk
+            spriteErnieWalk: SpriteErnieWalk,
+            spriteMarkIdle: SpriteMarkIdle,
+            spriteMarkToss: SpriteMarkToss,
+            spriteMarkHit: SpriteMarkHit,
+            spriteMarkWalk: SpriteMarkWalk,
         }, ...Car.GetImagesList()
     };
 
@@ -90,18 +99,30 @@ class GameScreen extends Component {
     guestJoined = (message) => {
         console.log(message);
         this.roomState.guest = message;
-        this.p2 = new CharacterObject(this, this.roomState.guest.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(490, 205), -1, 2);
+        this.p2 = this.getRandomChar(490, 205, -1, 2);
         // this.setState({ guestName: this.roomState.guest.userName });
+    }
+
+    getRandomChar = (x, y, facing, side) => {
+        const rand = Math.floor(Math.random() * 3)
+        switch(rand) {
+            case 0:
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(x, y), facing, side);
+            case 1:
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(x, y), facing, side);
+            case 2:
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, new Point(x, y), facing, side);
+        }
     }
 
     roomStateGenerated = (message) => {
         this.roomState = message;
         
-        this.p1 = new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(30, 205), 1, 1);
+        this.p1 = this.getRandomChar(30, 205, 1, 1);
         // this.setState({ hostName: this.roomState.host.userName });
 
         if (this.roomState.guest) {
-            this.p2 = new CharacterObject(this, this.roomState.guest.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(490, 205), -1, 2);
+            this.p2 = this.getRandomChar(490, 205, -1, 2);
             // this.setState({ guestName: this.roomState.guest.userName });
         }
     }
@@ -211,7 +232,9 @@ class GameScreen extends Component {
                 <div id="game">
                     <h4>Room Code: {this.props.roomCode}</h4>
                     <canvas ref="canvas" width={640} height={360} />
-                    <button className="btn btn-primary" onClick={this.toss}>Toss It!</button>
+                    <br />
+                    <h6>Move: [a] and [d]</h6>
+                    <h6>Throw: [space]</h6>
                 </div>
             );
         }

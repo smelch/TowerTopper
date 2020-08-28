@@ -26,10 +26,13 @@ code {
   box-shadow: none;
 }
 
+#titleImg {
+  width: 100vw
+}
+
 #login-wrapper {
   background-color: #184C6D;
   height: 100vh;
-  padding-top: 50vh;
 }
 
 #login {
@@ -54,6 +57,12 @@ input {
 }
 
 h4 {
+  color: #FEB948;
+  text-align: center;
+}
+
+h6 {
+  color: #FEB948;
   text-align: center;
 }
 
