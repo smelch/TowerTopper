@@ -43,8 +43,8 @@ class GameScreen extends Component {
         this.right_sprite_x = 490;
         this.sprite_y = 205;
 
-        this.p1 = new CharacterObject(this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit)
-        this.p2 = new CharacterObject(this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit)
+        this.p1 = new CharacterObject(this, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit)
+        this.p2 = new CharacterObject(this, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit)
     }
 
     guestJoined = (message) => {
@@ -59,6 +59,10 @@ class GameScreen extends Component {
 
     getRoomState = () => {
         return this.roomState;
+    }
+
+    addObject = (object) => {
+        this.gameObjects.push(object);
     }
 
     componentDidMount = () => {
