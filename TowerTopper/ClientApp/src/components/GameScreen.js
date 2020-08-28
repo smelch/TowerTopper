@@ -15,6 +15,7 @@ import SpriteDanHit from '../assets/sprite_dan_hit.png';
 import GameHeader from './gameobjects/GameHeader';
 import Car from './gameobjects/CarObject';
 import { Point } from './gameobjects/Coordinates';
+import { CollisionSystem } from './gameobjects/Collider';
 
 class GameScreen extends Component {
     imagesToLoad = {
@@ -106,6 +107,8 @@ class GameScreen extends Component {
                 gameObject.update(elapsedTime);
             }
         }
+
+        CollisionSystem.checkCollisions();
 
         this.gameObjects = this.gameObjects.sort((a, b) => a.drawOrder === b.drawOrder ? 0 : (a.drawOrder > b.drawOrder ? 1 : -1))
         const ctx = this.refs.canvas.getContext('2d');

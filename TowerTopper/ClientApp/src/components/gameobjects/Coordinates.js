@@ -4,15 +4,19 @@
         this.y = y;
         this.width = width;
         this.height = height;
+        this.right = x + width;
+        this.top = y;
+        this.bottom = y + height;
+        this.left = x;
     }
 
-    offsetByPoint = (point) => {
+    offset = (point) => {
         return new Rectangle(this.x + point.x, this.y + point.y, this.width, this.height);
     }
 
     doesOverlap = (rectangle) => {
-        return (this.x < (rectangle.x + rectangle.width) && (this.x + this.width) > rectangle.x &&
-            this.y > (rectangle.y + rectangle.height) && (this.y + this.height) < rectangle.y);
+        return (this.left < rectangle.right && this.right > rectangle.left &&
+            this.top < rectangle.bottom && this.bottom > rectangle.top);
     }
 
     areEqual = (rectangle) => {

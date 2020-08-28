@@ -8,6 +8,8 @@ class Collider extends Behavior {
     }
 
     mount(gameObject) {
+        console.log("behavior mounted");
+        console.log(this);
         this.gameObject = gameObject;
         CollisionSystem.registerCollider(this);
     }
@@ -26,8 +28,8 @@ class Collider extends Behavior {
     }
 
     CalculateBounds() {
-        const position = this.gameObject.getPosition();
-        return this.props.bounds.offsetBy(position);
+        const position = this.gameObject.position;
+        return this.props.bounds.offset(position);
     }
 }
 
@@ -45,14 +47,15 @@ export class CollisionSystem {
     }
 
     static checkCollisions() {
-        for (let i = 0; i < this.colliders.length - 2; i++) {
+        for (let i = 0; i < this.colliders.length - 1; i++) {
             const colliderA = this.colliders[i];
             const boundsA = colliderA.CalculateBounds();
 
-            for (let j = 1; j < this.colliders.length - 1; j++) {
+            for (let j = 1; j < this.colliders.length; j++) {
                 const colliderB = this.colliders[j];
                 const boundsB = colliderB.CalculateBounds();
                 if (boundsA.doesOverlap(boundsB)) {
+                    console.log("collision!");
                     colliderA.trigger(colliderB);
                     colliderB.trigger(colliderA);
                 }

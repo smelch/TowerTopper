@@ -1,21 +1,32 @@
-﻿import { Point } from './Coordinates';
+﻿import { Point, Rectangle } from './Coordinates';
 import Bug from '../../assets/cars/car_bug_large.png';
 import BugCrash from '../../assets/cars/car_bug_crash_large.png';
 import AnimateObject from './AnimateObject';
+import Collider from './Collider';
 
 class Car extends AnimateObject {
     constructor(game, thrower, flying, crashed, position) {
         super(game, 1, true, position);
-        console.log(flying);
-        console.log(crashed);
         this.thrower = thrower;
         this.isCrashed = false;
         this.initialPosition = position;
-        console.log(position);
         this.totalElapsedTime = 0;
-        this.addSpriteState('flying', 300, 200, 1, 1, flying, 'flying');
-        this.addSpriteState('crashed', 300, 200, 1, 1, crashed, 'crashed');
+        this.addTag("car");
+
+        super.addSpriteState('flying', 300, 200, 1, 1, flying, 'flying');
+        super.addSpriteState('crashed', 300, 200, 1, 1, crashed, 'crashed');
         super.changeState('flying');
+        super.addBehavior(new Collider({
+            onCollision: this.onCollision,
+            bounds: new Rectangle(0,0,300,200)
+        }));
+    }
+
+    onCollision(collider) {
+        const gameObject = collider.gameObject;
+        if (gameObject.hasTag("player") && gameObject != this.thrower) {
+            super.changeState('crashed');
+        }
     }
 
     update(elapsedTime) {
@@ -24,8 +35,8 @@ class Car extends AnimateObject {
         }
         this.totalElapsedTime += elapsedTime;
 
-        const newY = 0.001 * this.totalElapsedTime * this.totalElapsedTime - .5 * this.totalElapsedTime + this.initialPosition.y;
-        const newX = .5 * this.totalElapsedTime + this.initialPosition.x;
+        const newY = 0.001 * this.totalElapsedTime * this.totalElapsedTime - .7 * this.totalElapsedTime + this.initialPosition.y;
+        const newX = .55 * this.totalElapsedTime + this.initialPosition.x;
 
         this.position = new Point(newX, newY);
     }

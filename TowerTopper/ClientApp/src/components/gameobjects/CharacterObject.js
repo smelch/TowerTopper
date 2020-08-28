@@ -1,6 +1,7 @@
 import AnimateObject from './AnimateObject'
 import Collider from './Collider';
 import Car from './CarObject';
+import { Rectangle } from './Coordinates';
 
 class CharacterObject extends AnimateObject {
     constructor(game, idle, toss, hit, position) {
@@ -12,7 +13,8 @@ class CharacterObject extends AnimateObject {
 
         super.addTag('character');
         super.addBehavior(new Collider({
-            onCollision: this.onCollision
+            onCollision: (collider) => this.onCollision(collider),
+            bounds: new Rectangle(0,0,200,300)
         }));
 
         this.game.addGameObject(this);
@@ -29,7 +31,10 @@ class CharacterObject extends AnimateObject {
 
     onCollision(otherCollider) {
         const gameObject = otherCollider.gameObject;
-        if (gameObject.hasTag('car')) {
+        console.log(gameObject.tags);
+        console.log(gameObject.thrower);
+        console.log(this);
+        if (gameObject.hasTag('car') && gameObject.thrower != this) {
             this.changeState('hit');
         }
     }
