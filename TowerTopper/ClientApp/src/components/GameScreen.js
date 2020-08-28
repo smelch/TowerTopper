@@ -45,6 +45,12 @@ class GameScreen extends Component {
 
         this.p1 = new CharacterObject(this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit)
         this.p2 = new CharacterObject(this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit)
+
+        this.p1.setLoc(30, 205, false)
+        this.p2.setLoc(490, 205, false)
+
+        this.gameObjects.push(this.p1)
+        this.gameObjects.push(this.p2)
     }
 
     guestJoined = (message) => {
@@ -108,8 +114,8 @@ class GameScreen extends Component {
 
     draw = (ctx) => {
         
-        this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
-        this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
+        // this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
+        // this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
 
         this.animationFrame = window.requestAnimationFrame(this.tick);
     }
