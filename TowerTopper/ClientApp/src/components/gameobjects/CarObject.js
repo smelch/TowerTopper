@@ -56,10 +56,6 @@ class Car extends AnimateObject {
             console.log(newY);
             this.isCrashed = true;
             super.changeState('crashed');
-            //this.game.removeGameObject(this)
-
-            // TESTING
-            // this.isCrashed = true
         };
     }
 

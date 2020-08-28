@@ -4,7 +4,7 @@ import Car from './CarObject';
 import { Rectangle } from './Coordinates';
 
 class CharacterObject extends AnimateObject {
-    constructor(game, playerId, idle, toss, hit, walk, position, facing) {
+    constructor(game, playerId, idle, toss, hit, walk, position, facing, playSide) {
         super(game, 6, true, position, facing);
         this.game = game;
         this.addSpriteState('idle', 200, 300, 8, 0.5, idle, 'idle');
@@ -13,6 +13,8 @@ class CharacterObject extends AnimateObject {
         this.addSpriteState('walk', 200, 300, 4, 0.5, walk, 'walk');
         this.playerId = playerId;
         this.drawOrder = 98;
+
+        this.playSide = playSide
 
         super.addTag("character");
         super.addBehavior(new Collider({

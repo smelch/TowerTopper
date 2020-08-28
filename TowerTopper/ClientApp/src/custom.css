@@ -11,9 +11,27 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+  margin: 5px
 }
 
-h2 {
+.btn-primary:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#login {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+  display: block;
+  text-align: center;
+}
+
+input {
+  margin: 5px
+}
+
+h4 {
   text-align: center;
 }
 

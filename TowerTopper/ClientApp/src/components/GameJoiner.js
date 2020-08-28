@@ -44,19 +44,21 @@ class GameJoiner extends Component {
 
     render() {
         return (
-            <div>
-                <span>User Name</span>
+            <div id="login">
                 <input
                     type="text"
+                    placeholder="User Name"
                     value={this.state.userName}
                     onChange={e => this.setState({ userName: e.target.value })}
                 />
-                <span>Room Code</span>
+                <br />
                 <input
                     type="text"
+                    placeholder="Room Code"
                     value={this.state.roomCode}
                     onChange={e => this.setState({ roomCode: e.target.value })}
                 />
+                <br />
                 {
                     this.state.roomCode && this.state.roomCode.length > 0
                         ? <button className="btn btn-primary" onClick={this.joinRoom}>Join Game</button>
