@@ -4,7 +4,7 @@ import Car from './CarObject';
 
 class CharacterObject extends AnimateObject {
     constructor(game, idle, toss, hit, position) {
-        super(game, 10, true, position);
+        super(game, 6, true, position);
         this.game = game;
         this.addSpriteState('idle', 200, 300, 8, 0.5, idle, 'idle');
         this.addSpriteState('toss', 200, 300, 14, 0.5, toss, 'idle');
@@ -16,15 +16,20 @@ class CharacterObject extends AnimateObject {
         }));
 
         this.game.addGameObject(this);
+
+        this.isTossing = false
     }
 
     toss() {
+        this.isTossing = true
         this.changeState('toss');
-        Car.GenerateCar(this.game, this);
     }
 
     update(elapsedTime) {
-
+        if (this.isTossing && this.frameSteps == 7) {
+            Car.GenerateCar(this.game, this);
+            this.isTossing = false
+        }
     }
 
     onCollision(otherCollider) {
