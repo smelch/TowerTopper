@@ -48,7 +48,8 @@ class GameScreen extends Component {
     }
 
     guestJoined = (message) => {
-        this.guest = { playerId: message.playerId, userName: message.userName };
+        console.log(message);
+        this.roomState.guest = message;
     }
 
     roomStateGenerated = (message) => {
