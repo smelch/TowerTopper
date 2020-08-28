@@ -42,7 +42,7 @@ code {
   text-align: center;
 }
 
-input {
+#roomCode {
   margin: 5px;
   text-transform: uppercase;
 }
