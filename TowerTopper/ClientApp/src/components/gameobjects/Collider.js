@@ -55,7 +55,6 @@ export class CollisionSystem {
                 const colliderB = this.colliders[j];
                 const boundsB = colliderB.CalculateBounds();
                 if (boundsA.doesOverlap(boundsB)) {
-                    console.log("collision!");
                     colliderA.trigger(colliderB);
                     colliderB.trigger(colliderA);
                 }

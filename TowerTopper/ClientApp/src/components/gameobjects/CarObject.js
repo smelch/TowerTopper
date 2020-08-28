@@ -24,8 +24,9 @@ class Car extends AnimateObject {
 
     onCollision(collider) {
         const gameObject = collider.gameObject;
-        if (gameObject.hasTag("player") && gameObject != this.thrower) {
-            super.changeState('crashed');
+        // PROBLEM THIS DOESN'T TRIGGER
+        if (gameObject.hasTag("character") && gameObject != this.thrower) {
+            this.isCrashed = true
         }
     }
 
@@ -39,6 +40,13 @@ class Car extends AnimateObject {
         const newX = .55 * this.totalElapsedTime + this.initialPosition.x;
 
         this.position = new Point(newX, newY);
+        
+        if (newY > 400) {
+            this.game.removeGameObject(this)
+
+            // TESTING
+            this.isCrashed = true
+        };
     }
 
     static GenerateCar(game, thrower) {

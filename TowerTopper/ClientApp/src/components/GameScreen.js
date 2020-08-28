@@ -74,9 +74,10 @@ class GameScreen extends Component {
     removeGameObject = (object) => {
         const index = this.gameObjects.indexOf(object);
         if (index != -1) {
-            this.gameObjects = this.gameObjects.splice(index, 1);
+            //this.gameObjects = this.gameObjects.splice(index, 1);
+            this.gameObjects.splice(index, 1);
         }
-        object.destroy();
+        // object.destroy()
     }
 
     componentDidMount = () => {

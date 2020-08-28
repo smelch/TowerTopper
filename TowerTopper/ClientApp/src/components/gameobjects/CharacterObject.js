@@ -11,7 +11,7 @@ class CharacterObject extends AnimateObject {
         this.addSpriteState('toss', 200, 300, 14, 0.5, toss, 'idle');
         this.addSpriteState('hit', 200, 300, 4, 0.5, hit, 'idle');
 
-        super.addTag('character');
+        super.addTag("character");
         super.addBehavior(new Collider({
             onCollision: (collider) => this.onCollision(collider),
             bounds: new Rectangle(25,40,60,75)
