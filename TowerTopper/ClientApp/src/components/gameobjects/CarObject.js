@@ -48,8 +48,8 @@ class Car extends AnimateObject {
         this.totalElapsedTime += elapsedTime;
 
         console.log(this.facing);
-        const newY = 0.001 * this.totalElapsedTime * this.totalElapsedTime - 1.0 * this.totalElapsedTime + this.initialPosition.y;
-        const newX = .4 * this.totalElapsedTime * this.facing + this.initialPosition.x;
+        const newY = 0.0012 * this.totalElapsedTime * this.totalElapsedTime - 1.0 * this.totalElapsedTime + this.initialPosition.y;
+        const newX = .3 * this.totalElapsedTime * this.facing + this.initialPosition.x;
 
         this.position = new Point(newX, newY);
         if(this.collider.CalculateBounds().bottom > 330) {

@@ -23,7 +23,7 @@ class GameHeader extends GameObject {
         const roomState = this.stateSource.getRoomState();
         if (roomState) {
             ctx.font = "24pt sans-serif"
-            ctx.fillText("ROOM CODE: " + roomState.roomCode, 20, 340);
+            // ctx.fillText("ROOM CODE: " + roomState.roomCode, 20, 340);
 
             ctx.save();
             ctx.fillStyle = (roomState.host.playerId === roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;

@@ -125,21 +125,25 @@ class GameScreen extends Component {
     }
 
     handleKeyDown = (event) => {
-        if (event.keyCode == 65) {
-            this.getMyCharacter().walk(-1);
-        } else if (event.keyCode == 68) {
-            this.getMyCharacter().walk(1);
-        } else if (event.keyCode == 32) {
-            this.getMyCharacter().toss();
+        if (this.getMyCharacter().curState != "toss") {
+            if (event.keyCode == 65) {
+                this.getMyCharacter().walk(-1);
+            } else if (event.keyCode == 68) {
+                this.getMyCharacter().walk(1);
+            } else if (event.keyCode == 32) {
+                this.getMyCharacter().toss();
+            }
         }
     }
 
     handleKeyUp = (event) => {
-        const character = this.getMyCharacter();
-        if (event.keyCode == 65 && character.facing == -1) {
-            this.getMyCharacter().stopWalking();
-        } else if (event.keyCode == 68 && character.facing == 1) {
-            this.getMyCharacter().stopWalking();
+        if (this.getMyCharacter().curState != "toss") {
+            const character = this.getMyCharacter();
+            if (event.keyCode == 65 && character.facing == -1) {
+                this.getMyCharacter().stopWalking();
+            } else if (event.keyCode == 68 && character.facing == 1) {
+                this.getMyCharacter().stopWalking();
+            }
         }
     }
 
