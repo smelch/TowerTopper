@@ -17,7 +17,6 @@ class GameJoiner extends Component {
     }
 
     joinRoom = () => {
-        console.log("join room called");
         this.props.connection
             .send('JoinRoom', this.state.userName, this.state.roomCode)
             .catch(err => console.error(err));

@@ -14,11 +14,19 @@
         return (this.x < (rectangle.x + rectangle.width) && (this.x + this.width) > rectangle.x &&
             this.y > (rectangle.y + rectangle.height) && (this.y + this.height) < rectangle.y);
     }
+
+    areEqual = (rectangle) => {
+        return rectangle != null && this.x == rectangle.x && this.y == rectangle.y && this.width == rectangle.width && this.height == rectangle.height;
+    }
 }
 
 export class Point {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+    }
+
+    offset(point) {
+        return new Point(this.x + point.x, this.y + point.y);
     }
 }
