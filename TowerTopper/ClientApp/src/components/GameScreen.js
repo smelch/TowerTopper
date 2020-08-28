@@ -98,7 +98,7 @@ class GameScreen extends Component {
             //this.gameObjects = this.gameObjects.splice(index, 1);
             this.gameObjects.splice(index, 1);
         }
-        // object.destroy()
+        object.destroy()
     }
 
     componentDidMount = () => {

@@ -42,7 +42,8 @@ export class CollisionSystem {
     static unregisterCollider(collider) {
         const index = this.colliders.indexOf(collider);
         if (index != -1) {
-            this.colliders = this.colliders.splice(index, 1);
+            // this.colliders = this.colliders.splice(index, 1);
+            this.colliders.splice(index, 1);
         }
     }
 

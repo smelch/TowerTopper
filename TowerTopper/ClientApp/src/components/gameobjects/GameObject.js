@@ -28,7 +28,8 @@ class GameObject {
     removeBehavior(behavior) {
         const index = this.behaviors.indexOf(behavior);
         if (index != -1) {
-            this.behaviors = this.behaviors.splice(index, 1);
+            // this.behaviors = this.behaviors.splice(index, 1);
+            this.colliders.splice(index, 1);
             behavior.unmount();
         }
     }
@@ -48,6 +49,13 @@ class GameObject {
 
     hasTag(tag) {
         return this.tags.indexOf(tag) != -1;
+    }
+
+    destroy() {
+        var behavior;
+        for (behavior in this.behaviors) {
+            this.removeBehavior(behavior)
+        }
     }
 }
 
