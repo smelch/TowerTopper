@@ -13,16 +13,20 @@ import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
 
 import GameHeader from './gameobjects/GameHeader';
+import Car from './gameobjects/CarObject';
+import { Point } from './gameobjects/Coordinates';
 
 class GameScreen extends Component {
     imagesToLoad = {
-        background: Background,
-        spriteDanIdle: SpriteDanIdle,
-        spriteDanToss: SpriteDanToss,
-        spriteDanHit: SpriteDanHit,
-        spriteErnieIdle: SpriteErnieIdle,
-        spriteErnieToss: SpriteErnieToss,
-        spriteErnieHit: SpriteErnieHit
+        ...{
+            background: Background,
+            spriteDanIdle: SpriteDanIdle,
+            spriteDanToss: SpriteDanToss,
+            spriteDanHit: SpriteDanHit,
+            spriteErnieIdle: SpriteErnieIdle,
+            spriteErnieToss: SpriteErnieToss,
+            spriteErnieHit: SpriteErnieHit
+        }, ...Car.GetImagesList()
     };
 
     gameObjects = [];
@@ -34,6 +38,7 @@ class GameScreen extends Component {
 
     onImagesLoaded = (images) => {
         this.images = images;
+        Car.SetImagesList(images);
         this.setState({ imagesLoaded: true });
         this.lastTickStart = Date.now();
         this.animationFrame = window.requestAnimationFrame(this.tick);
@@ -43,8 +48,8 @@ class GameScreen extends Component {
         this.right_sprite_x = 490;
         this.sprite_y = 205;
 
-        this.p1 = new CharacterObject(this, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit)
-        this.p2 = new CharacterObject(this, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit)
+        this.p1 = new CharacterObject(this, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, new Point(30, 205));
+        this.p2 = new CharacterObject(this, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, new Point(490, 205));
     }
 
     guestJoined = (message) => {
@@ -61,8 +66,16 @@ class GameScreen extends Component {
         return this.roomState;
     }
 
-    addObject = (object) => {
+    addGameObject = (object) => {
         this.gameObjects.push(object);
+    }
+
+    removeGameObject = (object) => {
+        const index = this.gameObjects.indexOf(object);
+        if (index != -1) {
+            this.gameObjects = this.gameObjects.splice(index, 1);
+        }
+        object.destroy();
     }
 
     componentDidMount = () => {
@@ -85,7 +98,7 @@ class GameScreen extends Component {
 
     tick = () => {
         const tickStartTime = Date.now();
-        const elapsedTime = this.lastTickStart - tickStartTime;
+        const elapsedTime = tickStartTime - this.lastTickStart;
         this.gameObjects = this.gameObjects.sort((a, b) => a.updateOrder === b.updateOrder ? 0 : (a.updateOrder > b.updateOrder ? 1 : -1));
         for (const i in this.gameObjects) {
             const gameObject = this.gameObjects[i];
@@ -113,8 +126,8 @@ class GameScreen extends Component {
 
     draw = (ctx) => {
         
-        this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
-        this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
+        //this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
+        //this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
 
         this.animationFrame = window.requestAnimationFrame(this.tick);
     }

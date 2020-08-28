@@ -1,19 +1,64 @@
 ﻿import Behavior from './Behavior';
 
 class Collider extends Behavior {
-    constructor(gameObject, props) {
-        super(gameObject, "Collider");
+    constructor(props) {
+        super("Collider");
         this.props = props;
         this.lastBounds = null;
     }
 
+    mount(gameObject) {
+        this.gameObject = gameObject;
+        CollisionSystem.registerCollider(this);
+    }
+
+    unmount() {
+        this.gameObject = null;
+        CollisionSystem.unregisterCollider(this);
+    }
+
     update(elapsedTime) {
-        const newBounds = this.CalculateBounds();
+
+    }
+
+    trigger(otherCollider) {
+        this.props.onCollision(otherCollider);
     }
 
     CalculateBounds() {
         const position = this.gameObject.getPosition();
+        return this.props.bounds.offsetBy(position);
     }
 }
 
-export default Collider
+export class CollisionSystem {
+    static colliders = [];
+    static registerCollider(collider) {
+        this.colliders.push(collider);
+    }
+
+    static unregisterCollider(collider) {
+        const index = this.colliders.indexOf(collider);
+        if (index != -1) {
+            this.colliders = this.colliders.splice(index, 1);
+        }
+    }
+
+    static checkCollisions() {
+        for (let i = 0; i < this.colliders.length - 2; i++) {
+            const colliderA = this.colliders[i];
+            const boundsA = colliderA.CalculateBounds();
+
+            for (let j = 1; j < this.colliders.length - 1; j++) {
+                const colliderB = this.colliders[j];
+                const boundsB = colliderB.CalculateBounds();
+                if (boundsA.doesOverlap(boundsB)) {
+                    colliderA.trigger(colliderB);
+                    colliderB.trigger(colliderA);
+                }
+            }
+        }
+    }
+}
+
+export default Collider;
