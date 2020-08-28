@@ -211,7 +211,6 @@ class GameScreen extends Component {
                 <div id="game">
                     <h4>Room Code: {this.props.roomCode}</h4>
                     <canvas ref="canvas" width={640} height={360} />
-                    <button className="btn btn-primary" onClick={this.toss}>Toss It!</button>
                 </div>
             );
         }

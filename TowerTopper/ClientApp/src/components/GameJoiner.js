@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import title from '../assets/title.png'
 
 class GameJoiner extends Component {
     constructor(props) {
@@ -45,6 +46,7 @@ class GameJoiner extends Component {
     render() {
         return (
             <div id="login-wrapper">
+                <img id="titleImg" src={title}></img>
                 <div id="login">
                     <input
                         type="text"
