@@ -87,6 +87,14 @@ class CharacterObject extends AnimateObject {
 
         if (this.isWalking) {
             this.position.x = this.position.x + elapsedTime * 0.1 * this.facing;
+
+            if (this.playSide == 1) {
+                this.position.x = Math.max(this.position.x, 0)
+                this.position.x = Math.min(this.position.x, 220)
+            }else if (this.playSide == 2) {
+                this.position.x = Math.max(this.position.x, 320)
+                this.position.x = Math.min(this.position.x, 560)
+            }
         }
     }
 

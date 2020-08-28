@@ -43,7 +43,8 @@ code {
 }
 
 input {
-  margin: 5px
+  margin: 5px;
+  text-transform: uppercase;
 }
 
 #game {

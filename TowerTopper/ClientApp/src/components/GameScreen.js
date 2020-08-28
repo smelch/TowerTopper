@@ -70,6 +70,7 @@ class GameScreen extends Component {
             hostName: '',
             guestName: ''
         };
+        this.roomCode = props.roomCode
     }
 
     assetsLoaded = (images, sounds, music) => {
@@ -230,7 +231,7 @@ class GameScreen extends Component {
         if (this.state.imagesLoaded) {
             return (
                 <div id="game">
-                    <h4>Room Code: {this.props.roomCode}</h4>
+                    <h4>Room Code: {this.roomCode}</h4>
                     <canvas ref="canvas" width={640} height={360} />
                     <br />
                     <h6>Move: [a] and [d]</h6>
