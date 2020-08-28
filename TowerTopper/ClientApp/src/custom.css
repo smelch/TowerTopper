@@ -1,6 +1,6 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: #FEB948;
 }
 
 code {
@@ -8,10 +8,17 @@ code {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-  margin: 5px
+  color: #184C6D;
+  background-color: #FBEBC7;
+  border-color: #FEB948;
+  margin: 5px;
+}
+
+.btn-primary:hover {
+  color: #184C6D;
+  background-color: #FEB948;
+  outline: none;
+  box-shadow: none;
 }
 
 .btn-primary:focus {
@@ -19,16 +26,31 @@ code {
   box-shadow: none;
 }
 
+#login-wrapper {
+  background-color: #184C6D;
+  height: 100vh;
+  padding-top: 50vh;
+}
+
 #login {
   margin-right: auto;
   margin-left: auto;
-  margin-top: 20px;
   display: block;
   text-align: center;
 }
 
 input {
   margin: 5px
+}
+
+#game {
+  background-color: #184C6D;
+  height: 100vh;
+  padding-top: 20vh;
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+  text-align: center;
 }
 
 h4 {
