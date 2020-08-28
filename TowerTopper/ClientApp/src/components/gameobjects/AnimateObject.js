@@ -11,6 +11,12 @@ class AnimateObject extends GameObject {
         this.onAnimationEnd = null;
     };
 
+    setLoc(x, y, flip) {
+        this.x = x
+        this.y = y
+        this.flip = flip
+    }
+
     addSpriteState(name, frameWidth, frameHeight, numFrames, scale, img, post) {
         this.states[name] = {}
         this.states[name].frameWidth = frameWidth
@@ -47,7 +53,8 @@ class AnimateObject extends GameObject {
             this.position.y, 
             (this.states[this.curState].frameWidth * 0.5), 
             (this.states[this.curState].frameHeight * 0.5))
-                if (this.frameSteps == this.states[this.curState].numFrames - 1) {
+        
+        if (this.frameSteps == this.states[this.curState].numFrames - 1) {
             this.curState = this.states[this.curState].post
             this.frameSteps = 0
         }

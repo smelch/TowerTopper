@@ -129,9 +129,6 @@ class GameScreen extends Component {
 
     draw = (ctx) => {
         
-        //this.p1.draw(ctx, this.left_sprite_x, this.sprite_y, 100, 150)
-        //this.p2.draw(ctx, this.right_sprite_x, this.sprite_y, 100, 150)
-
         this.animationFrame = window.requestAnimationFrame(this.tick);
     }
 
