@@ -67,6 +67,10 @@ class GameScreen extends Component {
         return this.roomState;
     }
 
+    addObject = (object) => {
+        this.gameObjects.push(object);
+    }
+
     componentDidMount = () => {
         this.gameObjects.push(new GameHeader({ position: { x: 0, y: 0 }, stateSource: this }));
 
