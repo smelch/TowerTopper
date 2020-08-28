@@ -61,6 +61,11 @@ h4 {
   text-align: center;
 }
 
+h6 {
+  color: #FEB948;
+  text-align: center;
+}
+
 canvas {
   image-rendering: pixelated;
   margin-right: auto;
