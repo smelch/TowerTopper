@@ -12,6 +12,10 @@ import SpriteDanIdle from '../assets/sprite_dan_idle.png';
 import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
 
+import BackgroundMusic from '../assets/music/mus_ingame.ogg';
+
+import ErnieThrow2 from '../assets/sounds/eff_ernie_throw_2.ogg';
+
 import GameHeader from './gameobjects/GameHeader';
 import Car from './gameobjects/CarObject';
 import { Point } from './gameobjects/Coordinates';
@@ -30,6 +34,17 @@ class GameScreen extends Component {
         }, ...Car.GetImagesList()
     };
 
+    audioToLoad = {
+        ernie: {
+            taunts: [],
+            throws: [ErnieThrow2]
+        }
+    };
+
+    musicToLoad = {
+        background: BackgroundMusic
+    };
+
     gameObjects = [];
 
     constructor(props) {
@@ -37,9 +52,15 @@ class GameScreen extends Component {
         this.state = { imagesLoaded: false };
     }
 
-    onImagesLoaded = (images) => {
+    assetsLoaded = (images, sounds, music) => {
         this.images = images;
+        this.music = music;
+
+        this.music.background.volume = 0.1;
+        this.music.background.loop = true;
+        this.music.background.play();
         Car.SetImagesList(images);
+        CharacterObject.SetSoundList(sounds);
         this.setState({ imagesLoaded: true });
         this.lastTickStart = Date.now();
         this.animationFrame = window.requestAnimationFrame(this.tick);
@@ -145,7 +166,7 @@ class GameScreen extends Component {
         }
 
         return (
-            <ImageLoader images={this.imagesToLoad} onLoad={this.onImagesLoaded} />
+            <ImageLoader images={this.imagesToLoad} sounds={this.audioToLoad} music={this.musicToLoad} onLoad = { this.assetsLoaded } />
         );
     }
 }

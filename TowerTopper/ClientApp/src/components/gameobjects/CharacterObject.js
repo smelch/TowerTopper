@@ -25,6 +25,7 @@ class CharacterObject extends AnimateObject {
     toss() {
         this.isTossing = true
         this.changeState('toss');
+        CharacterObject.sounds.ernie.throws[0].play();
     }
 
     update(elapsedTime) {
@@ -42,6 +43,10 @@ class CharacterObject extends AnimateObject {
         if (gameObject.hasTag('car') && gameObject.thrower != this) {
             this.changeState('hit');
         }
+    }
+
+    static SetSoundList(sounds) {
+        this.sounds = sounds;
     }
 }
 

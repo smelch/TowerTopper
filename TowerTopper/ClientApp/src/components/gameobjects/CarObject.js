@@ -23,6 +23,7 @@ class Car extends AnimateObject {
     }
 
     onCollision(collider) {
+        console.log("car crashed");
         const gameObject = collider.gameObject;
         // PROBLEM THIS DOESN'T TRIGGER
         if (gameObject.hasTag("character") && gameObject != this.thrower) {
