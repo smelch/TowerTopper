@@ -9,6 +9,8 @@ class GameObject {
     constructor(game, position, props) {
         this.game = game;
         this.position = position;
+        this.game.addGameObject(this);
+
         if (props) {
             this.drawable = props.drawable;
             this.updateable = props.updateable;
@@ -28,8 +30,7 @@ class GameObject {
     removeBehavior(behavior) {
         const index = this.behaviors.indexOf(behavior);
         if (index != -1) {
-            // this.behaviors = this.behaviors.splice(index, 1);
-            this.colliders.splice(index, 1);
+            this.behaviors.splice(index, 1);
             behavior.unmount();
         }
     }

@@ -1,7 +1,7 @@
 import GameObject from './GameObject'
 
 class AnimateObject extends GameObject {
-    constructor(game, fps, doesUpdate, position) {
+    constructor(game, fps, doesUpdate, position, facing) {
         super(game, position, { updateable: doesUpdate, drawable: true });
         this.lastFrameUpdate = Date.now()
         this.tickThresh = 60/fps
@@ -9,6 +9,7 @@ class AnimateObject extends GameObject {
         this.states = []
         this.curState = "idle"
         this.onAnimationEnd = null;
+        this.facing = (facing == 0) ? 1 : facing;
     };
 
     setLoc(x, y, flip) {
@@ -44,16 +45,18 @@ class AnimateObject extends GameObject {
             this.lastFrameUpdate = Date.now();
         }
 
+        ctx.save();
+        ctx.scale(this.facing, 1);
         ctx.drawImage(this.states[this.curState].img, 
             (this.states[this.curState].frameWidth * this.frameSteps), 
             0, 
             this.states[this.curState].frameWidth, 
             this.states[this.curState].frameHeight, 
-            this.position.x, 
+            this.position.x * this.facing + ((this.facing == -1) ? -0.5 * this.states[this.curState].frameWidth : 0), 
             this.position.y, 
             (this.states[this.curState].frameWidth * 0.5), 
             (this.states[this.curState].frameHeight * 0.5))
-        
+        ctx.restore();
         if (this.frameSteps == this.states[this.curState].numFrames - 1) {
             this.curState = this.states[this.curState].post
             this.frameSteps = 0

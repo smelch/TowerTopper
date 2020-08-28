@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
+using TowerTopper.Application.Messages.Events;
 using TowerTopper.Domain.Players;
 
 namespace TowerTopper.Hubs
 {
-    public class GameHub : Hub<GameHub>
+    public class GameHub : Hub
     {
         private readonly ICommandBroker _commandBroker;
 
@@ -32,5 +33,14 @@ namespace TowerTopper.Hubs
 
         public Task SendRoomState(string roomId) =>
             _commandBroker.Execute(new SendRoomState() { RoomId = roomId, PlayerId = Context.ConnectionId });
+
+        public Task ThrowCar(string roomId, double time) =>
+            Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("CarThrown", new CarThrown() { PlayerId = Context.ConnectionId, Time = DateTime.UtcNow });
+
+        public Task StartWalk(string roomId, int facing, double time) =>
+            Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("WalkStarted", new WalkStarted() { PlayerId = Context.ConnectionId, Facing = facing, Time = DateTime.UtcNow });
+
+        public Task StopWalk(string roomId, double time) =>
+            Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("WalkStopped", new WalkStopped() { PlayerId = Context.ConnectionId, Time = DateTime.UtcNow });
     }
 }

@@ -7,14 +7,18 @@ import CharacterObject from './gameobjects/CharacterObject';
 import SpriteErnieIdle from '../assets/sprite_ernie_idle.png';
 import SpriteErnieToss from '../assets/sprite_ernie_toss.png';
 import SpriteErnieHit from '../assets/sprite_ernie_hit.png';
+import SpriteErnieWalk from '../assets/sprite_ernie_walk.png';
 
 import SpriteDanIdle from '../assets/sprite_dan_idle.png';
 import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
+import SpriteDanWalk from '../assets/sprite_dan_walk.png';
 
 import BackgroundMusic from '../assets/music/mus_ingame.ogg';
 
 import ErnieThrow2 from '../assets/sounds/eff_ernie_throw_2.ogg';
+import ErnieHit1 from '../assets/sounds/eff_ernie_hit_1.ogg';
+import ErnieHit2 from '../assets/sounds/eff_ernie_hit_2.ogg';
 
 import GameHeader from './gameobjects/GameHeader';
 import Car from './gameobjects/CarObject';
@@ -28,16 +32,19 @@ class GameScreen extends Component {
             spriteDanIdle: SpriteDanIdle,
             spriteDanToss: SpriteDanToss,
             spriteDanHit: SpriteDanHit,
+            spriteDanWalk: SpriteDanWalk,
             spriteErnieIdle: SpriteErnieIdle,
             spriteErnieToss: SpriteErnieToss,
-            spriteErnieHit: SpriteErnieHit
+            spriteErnieHit: SpriteErnieHit,
+            spriteErnieWalk: SpriteErnieWalk
         }, ...Car.GetImagesList()
     };
 
     audioToLoad = {
         ernie: {
             taunts: [],
-            throws: [ErnieThrow2]
+            throws: [ErnieThrow2],
+            hits: [ErnieHit1, ErnieHit2]
         }
     };
 
@@ -53,12 +60,17 @@ class GameScreen extends Component {
     }
 
     assetsLoaded = (images, sounds, music) => {
+        this.props.connection
+            .send("SendRoomState", this.props.roomId)
+            .catch(err => console.error(err));
+
         this.images = images;
         this.music = music;
 
         this.music.background.volume = 0.1;
         this.music.background.loop = true;
-        this.music.background.play();
+        //this.music.background.play();
+
         Car.SetImagesList(images);
         CharacterObject.SetSoundList(sounds);
         this.setState({ imagesLoaded: true });
@@ -69,19 +81,30 @@ class GameScreen extends Component {
         this.left_sprite_x = 30;
         this.right_sprite_x = 490;
         this.sprite_y = 205;
-
-        this.p1 = new CharacterObject(this, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, new Point(30, 205));
-        this.p2 = new CharacterObject(this, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, new Point(490, 205));
     }
 
     guestJoined = (message) => {
         console.log(message);
         this.roomState.guest = message;
+        this.p2 = new CharacterObject(this, this.roomState.guest.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(490, 205), -1);
     }
 
     roomStateGenerated = (message) => {
-        console.log(message);
         this.roomState = message;
+        
+        this.p1 = new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(30, 205), 1);
+
+        if (this.roomState.guest) {
+            this.p2 = new CharacterObject(this, this.roomState.guest.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(490, 205), -1);
+        }
+    }
+
+    getMyCharacter = () => {
+        if (this.p1.playerId == this.roomState.myPlayerId) {
+            return this.p1;
+        }
+
+        return this.p2;
     }
 
     getRoomState = () => {
@@ -101,14 +124,31 @@ class GameScreen extends Component {
         object.destroy()
     }
 
-    componentDidMount = () => {
-        this.gameObjects.push(new GameHeader({ position: { x: 0, y: 0 }, stateSource: this }));
+    handleKeyDown = (event) => {
+        if (event.keyCode == 65) {
+            this.getMyCharacter().walk(-1);
+        } else if (event.keyCode == 68) {
+            this.getMyCharacter().walk(1);
+        } else if (event.keyCode == 32) {
+            this.getMyCharacter().toss();
+        }
+    }
 
+    handleKeyUp = (event) => {
+        const character = this.getMyCharacter();
+        if (event.keyCode == 65 && character.facing == -1) {
+            this.getMyCharacter().stopWalking();
+        } else if (event.keyCode == 68 && character.facing == 1) {
+            this.getMyCharacter().stopWalking();
+        }
+    }
+
+    componentDidMount = () => {
+        document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("keyup", this.handleKeyUp);
+        this.gameObjects.push(new GameHeader(this, { x: 0, y: 0 }, { stateSource: this }));
         this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
         this.props.connection.on("GuestJoinedRoom", this.guestJoined);
-        this.props.connection
-            .send("SendRoomState", this.props.roomId)
-            .catch(err => console.error(err));
     }
 
     componentWillUnmount = () => {
@@ -116,7 +156,7 @@ class GameScreen extends Component {
     }
 
     toss = () => {
-        this.p1.toss();
+        this.getMyCharacter().toss();
     }
 
     tick = () => {

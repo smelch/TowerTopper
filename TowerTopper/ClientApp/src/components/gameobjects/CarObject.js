@@ -6,28 +6,31 @@ import Collider from './Collider';
 
 class Car extends AnimateObject {
     constructor(game, thrower, flying, crashed, position) {
-        super(game, 1, true, position);
+        super(game, 1, true, position, thrower.facing);
         this.thrower = thrower;
+        console.log("CAR!");
+        console.log(thrower);
         this.isCrashed = false;
         this.initialPosition = position;
         this.totalElapsedTime = 0;
         this.addTag("car");
 
         super.addSpriteState('flying', 300, 200, 1, 1, flying, 'flying');
-        super.addSpriteState('crashed', 300, 200, 1, 1, crashed, 'crashed');
+        super.addSpriteState('crashed', 300, 220, 1, 1, crashed, 'crashed');
         super.changeState('flying');
-        super.addBehavior(new Collider({
-            onCollision: this.onCollision,
-            bounds: new Rectangle(20,35,120,50)
-        }));
+        this.collider = new Collider({
+            onCollision: (collider) => this.onCollision(collider),
+            bounds: new Rectangle(20, 35, 120, 50)
+        });
+        super.addBehavior(this.collider);
     }
 
     onCollision(collider) {
-        console.log("car crashed");
         const gameObject = collider.gameObject;
-        // PROBLEM THIS DOESN'T TRIGGER
         if (gameObject.hasTag("character") && gameObject != this.thrower) {
-            this.isCrashed = true
+            this.isCrashed = true;
+            super.changeState('crashed');
+            super.removeBehavior(this.collider);
         }
     }
 
@@ -37,8 +40,9 @@ class Car extends AnimateObject {
         }
         this.totalElapsedTime += elapsedTime;
 
+        console.log(this.facing);
         const newY = 0.001 * this.totalElapsedTime * this.totalElapsedTime - .7 * this.totalElapsedTime + this.initialPosition.y;
-        const newX = .55 * this.totalElapsedTime + this.initialPosition.x;
+        const newX = .5 * this.totalElapsedTime * this.facing + this.initialPosition.x;
 
         this.position = new Point(newX, newY);
         
@@ -51,10 +55,10 @@ class Car extends AnimateObject {
     }
 
     static GenerateCar(game, thrower) {
+        console.log(thrower);
         const index = Math.floor(Math.random() * CarType.ImageReferences.length);
         console.log("using car " + index);
-        const car = new Car(game, thrower, CarType.Images[index + "_flying"], CarType.Images[index + "_crashed"], thrower.position.offset(new Point(10, 10)));
-        game.addGameObject(car);
+        const car = new Car(game, thrower, CarType.Images[index + "_flying"], CarType.Images[index + "_crashed"], thrower.position.offset(new Point(10 * thrower.facing, 10)));
         return car;
     }
 

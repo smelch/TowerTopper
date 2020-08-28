@@ -1,4 +1,5 @@
 ﻿import GameObject from './GameObject';
+import { Point } from './Coordinates';
 
 class GameHeader extends GameObject {
     myPlayerFillStyle = "#00CC00";
@@ -6,8 +7,8 @@ class GameHeader extends GameObject {
     otherPlayerFillStyle = "#CC0000";
     otherPlayerStrokeStyle = "#550000";
 
-    constructor(props) {
-        super({
+    constructor(game, position, props) {
+        super(game, position, {
             updateable: false,
             drawable: true,
             drawOrder: 99,
