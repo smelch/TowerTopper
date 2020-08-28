@@ -14,7 +14,7 @@ class CharacterObject extends AnimateObject {
         super.addTag('character');
         super.addBehavior(new Collider({
             onCollision: (collider) => this.onCollision(collider),
-            bounds: new Rectangle(0,0,200,300)
+            bounds: new Rectangle(25,40,60,75)
         }));
 
         this.game.addGameObject(this);
