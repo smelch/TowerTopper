@@ -20,7 +20,7 @@
     }
 
     areEqual = (rectangle) => {
-        return rectangle != null && this.x == rectangle.x && this.y == rectangle.y && this.width == rectangle.width && this.height == rectangle.height;
+        return rectangle != null && this.x === rectangle.x && this.y === rectangle.y && this.width === rectangle.width && this.height === rectangle.height;
     }
 }
 
