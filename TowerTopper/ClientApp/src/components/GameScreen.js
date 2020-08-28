@@ -99,30 +99,30 @@ class GameScreen extends Component {
     guestJoined = (message) => {
         console.log(message);
         this.roomState.guest = message;
-        this.p2 = this.getRandomChar(490, 205, -1, 2);
+        this.p2 = this.getRandomChar(this.roomState.guest.playerId, 490, 205, -1, 2);
         // this.setState({ guestName: this.roomState.guest.userName });
     }
 
-    getRandomChar = (x, y, facing, side) => {
+    getRandomChar = (id, x, y, facing, side) => {
         const rand = Math.floor(Math.random() * 3)
         switch(rand) {
             case 0:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(x, y), facing, side);
             case 1:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(x, y), facing, side);
             case 2:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, new Point(x, y), facing, side);
         }
     }
 
     roomStateGenerated = (message) => {
         this.roomState = message;
         
-        this.p1 = this.getRandomChar(30, 205, 1, 1);
+        this.p1 = this.getRandomChar(this.roomState.host.playerId, 30, 205, 1, 1);
         // this.setState({ hostName: this.roomState.host.userName });
 
         if (this.roomState.guest) {
-            this.p2 = this.getRandomChar(490, 205, -1, 2);
+            this.p2 = this.getRandomChar(this.roomState.guest.playerId, 490, 205, -1, 2);
             // this.setState({ guestName: this.roomState.guest.userName });
         }
     }
