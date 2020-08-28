@@ -5,6 +5,7 @@ class Collider extends Behavior {
         super("Collider");
         this.props = props;
         this.lastBounds = null;
+        this.enabled = true;
     }
 
     mount(gameObject) {
@@ -42,7 +43,6 @@ export class CollisionSystem {
     static unregisterCollider(collider) {
         const index = this.colliders.indexOf(collider);
         if (index != -1) {
-            // this.colliders = this.colliders.splice(index, 1);
             this.colliders.splice(index, 1);
         }
     }
@@ -50,10 +50,16 @@ export class CollisionSystem {
     static checkCollisions() {
         for (let i = 0; i < this.colliders.length - 1; i++) {
             const colliderA = this.colliders[i];
+            if (!colliderA.enabled)
+                continue;
+
             const boundsA = colliderA.CalculateBounds();
 
             for (let j = 1; j < this.colliders.length; j++) {
                 const colliderB = this.colliders[j];
+                if (!colliderB.enabled)
+                    continue;
+
                 const boundsB = colliderB.CalculateBounds();
                 if (boundsA.doesOverlap(boundsB)) {
                     colliderA.trigger(colliderB);

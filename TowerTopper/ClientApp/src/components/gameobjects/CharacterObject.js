@@ -12,7 +12,7 @@ class CharacterObject extends AnimateObject {
         this.addSpriteState('hit', 200, 300, 4, 0.5, hit, 'idle');
         this.addSpriteState('walk', 200, 300, 4, 0.5, walk, 'walk');
         this.playerId = playerId;
-        
+        this.drawOrder = 98;
 
         super.addTag("character");
         super.addBehavior(new Collider({
@@ -84,7 +84,7 @@ class CharacterObject extends AnimateObject {
         }
 
         if (this.isWalking) {
-            this.position.x = this.position.x + elapsedTime * 0.04 * this.facing;
+            this.position.x = this.position.x + elapsedTime * 0.1 * this.facing;
         }
     }
 
