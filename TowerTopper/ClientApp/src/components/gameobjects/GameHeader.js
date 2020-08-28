@@ -3,8 +3,8 @@
 class GameHeader extends GameObject {
     myPlayerFillStyle = "#00CC00";
     myPlayerStrokeStyle = "#005500";
-    otherPlayerFillStyle = "#AAAA00";
-    otherPlayerStrokeStyle = "#000000";
+    otherPlayerFillStyle = "#CC0000";
+    otherPlayerStrokeStyle = "#550000";
 
     constructor(props) {
         super({
@@ -21,8 +21,8 @@ class GameHeader extends GameObject {
     draw(elapsedTime, ctx) {
         const roomState = this.stateSource.getRoomState();
         if (roomState) {
-            ctx.font = "16pt sans-serif"
-            ctx.fillText("ROOM CODE: " + roomState.roomCode, 20, 20);
+            ctx.font = "24pt sans-serif"
+            ctx.fillText("ROOM CODE: " + roomState.roomCode, 20, 340);
 
             ctx.save();
             ctx.fillStyle = (roomState.host.playerId === roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;
@@ -30,11 +30,12 @@ class GameHeader extends GameObject {
             ctx.strokeText(roomState.host.userName, 50, 50);
             ctx.restore();
 
-            if (this.guest) {
+            if (roomState.guest) {
                 ctx.save();
-                ctx.fillStyle = (this.guest.playerId === roomState.myPlayerId) ? "#CCFFCC" : "#AAAA00";
-                ctx.fillText(this.guest.userName, 300, 40);
-                ctx.strokeText(this.guest.userName, 300, 40);
+                ctx.fillStyle = (roomState.guest.playerId === roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;
+                const size = ctx.measureText(roomState.guest.userName);
+                ctx.fillText(roomState.guest.userName, 590 - size.width, 50);
+                ctx.strokeText(roomState.guest.userName, 590 - size.width, 50);
                 ctx.restore();
             }
         }
