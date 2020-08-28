@@ -12,7 +12,7 @@ import SpriteDanIdle from '../assets/sprite_dan_idle.png';
 import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
 
-import GameHeader from '../noreact/GameHeader';
+import GameHeader from './gameobjects/GameHeader';
 
 class GameScreen extends Component {
     imagesToLoad = {
@@ -75,7 +75,8 @@ class GameScreen extends Component {
     }
 
     toss = () => {
-        this.p1.toss()
+        this.p1.toss();
+    }
 
     tick = () => {
         const tickStartTime = Date.now();
