@@ -23,6 +23,7 @@ class Car extends AnimateObject {
     }
 
     onCollision(collider) {
+        console.log("car crashed");
         const gameObject = collider.gameObject;
         if (gameObject.hasTag("player") && gameObject != this.thrower) {
             super.changeState('crashed');

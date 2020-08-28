@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\assets\sounds\" />
     <Folder Include="ClientApp\src\noreact\" />
   </ItemGroup>
 
