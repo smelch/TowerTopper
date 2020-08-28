@@ -8,16 +8,22 @@ import SpriteErnieIdle from '../assets/sprite_ernie_idle.png';
 import SpriteErnieToss from '../assets/sprite_ernie_toss.png';
 import SpriteErnieHit from '../assets/sprite_ernie_hit.png';
 import SpriteErnieWalk from '../assets/sprite_ernie_walk.png';
+import SpriteErnieLoss from '../assets/sprite_ernie_loss.png';
+import SpriteErnieWin from '../assets/sprite_ernie_victory.png';
 
 import SpriteDanIdle from '../assets/sprite_dan_idle.png';
 import SpriteDanToss from '../assets/sprite_dan_toss.png';
 import SpriteDanHit from '../assets/sprite_dan_hit.png';
 import SpriteDanWalk from '../assets/sprite_dan_walk.png';
+import SpriteDanLoss from '../assets/sprite_dan_loss.png';
+import SpriteDanWin from '../assets/sprite_dan_victory.png';
 
 import SpriteMarkIdle from '../assets/sprite_mark_idle.png';
 import SpriteMarkToss from '../assets/sprite_mark_toss.png';
 import SpriteMarkHit from '../assets/sprite_mark_hit.png';
 import SpriteMarkWalk from '../assets/sprite_mark_walk.png';
+import SpriteMarkLoss from '../assets/sprite_mark_loss.png';
+import SpriteMarkWin from '../assets/sprite_mark_victory.png';
 
 import BackgroundMusic from '../assets/music/mus_ingame.ogg';
 
@@ -107,11 +113,11 @@ class GameScreen extends Component {
         const rand = Math.floor(Math.random() * 3)
         switch(rand) {
             case 0:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, this.images.spriteErnieLoss, this.images.spriteErnieWin, new Point(x, y), facing, side);
             case 1:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, this.images.spriteDanLoss, this.images.spriteDanWin, new Point(x, y), facing, side);
             case 2:
-                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, new Point(x, y), facing, side);
+                return new CharacterObject(this, this.roomState.host.playerId, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, this.images.spriteMarkLoss, this.images.spriteMarkWin, new Point(x, y), facing, side);
         }
     }
 

@@ -4,14 +4,33 @@ import Car from './CarObject';
 import { Rectangle } from './Coordinates';
 
 class CharacterObject extends AnimateObject {
-    constructor(game, playerId, idle, toss, hit, walk, loss, position, facing, playSide) {
+    constructor(game, playerId, idle, toss, hit, walk, loss, win, position, facing, playSide, characterKey) {
         super(game, 6, true, position, facing);
         this.game = game;
         this.addSpriteState('idle', 200, 300, 8, 0.5, idle, 'idle');
         this.addSpriteState('toss', 200, 300, 14, 0.5, toss, 'idle');
         this.addSpriteState('hit', 200, 300, 4, 0.5, hit, 'idle');
         this.addSpriteState('walk', 200, 300, 4, 0.5, walk, 'walk');
-        this.addSpriteState('loss', 200, 300, 4, 0.5, loss, 'loss');
+
+        //Character specific people
+        const lossFrames = 0;
+        const winFrames = 0;
+        switch (characterKey) {
+            case "ernie":
+                lossFrames = 7;
+                winFrames = 5;
+                break;
+            case "dan":
+                lossFrames = 2;
+                winFrames = 5;
+                break;
+            case "mark":
+                loss = 4;
+                winFrames = 10;
+        }
+
+        this.addSpriteState('loss', 200, 300, lossFrames, 0.5, loss, 'loss');
+        this.addSpriteState('win', 200, 300, winFrames, 0.5, win, 'win');
         this.playerId = playerId;
         this.drawOrder = 98;
         this.health = 3;
@@ -32,7 +51,7 @@ class CharacterObject extends AnimateObject {
     }
 
     toss() {
-        if (this.isDead) {
+        if (this.game.gameOver) {
             return;
         }
 
@@ -47,12 +66,16 @@ class CharacterObject extends AnimateObject {
     }
 
     walk(facing) {
-        if (!this.isDead && !this.isTossing && (facing !== this.facing || !this.isWalking)) {
+        if (!this.game.gameOver && !this.isTossing && (facing !== this.facing || !this.isWalking)) {
             this.changeState('walk');
             this.facing = facing;
             this.isWalking = true;
             this.game.props.connection.send("StartWalk", this.game.props.roomId, this.facing, Date.now()).catch(err => console.error(err));
         }
+    }
+
+    win() {
+        this.changeState('win');
     }
 
     remote_walk(message) {
@@ -64,7 +87,7 @@ class CharacterObject extends AnimateObject {
     }
 
     stopWalking() {
-        if (!this.isDead) {
+        if (!this.game.gameOver) {
             this.changeState('idle');
             this.isWalking = false;
             this.game.props.connection.send("StopWalk", this.game.props.roomId, Date.now()).catch(err => console.error(err));
@@ -88,7 +111,7 @@ class CharacterObject extends AnimateObject {
     }
 
     update(elapsedTime) {
-        if (this.isDead) {
+        if (this.gameOver) {
             return;
         }
 
