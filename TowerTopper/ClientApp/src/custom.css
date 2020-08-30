@@ -42,8 +42,9 @@ code {
   text-align: center;
 }
 
-input {
-  margin: 5px
+#roomCode {
+  margin: 5px;
+  text-transform: uppercase;
 }
 
 #game {

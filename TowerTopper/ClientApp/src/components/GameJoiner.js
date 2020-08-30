@@ -55,11 +55,11 @@ class GameJoiner extends Component {
                         onChange={e => this.setState({ userName: e.target.value })}
                     />
                     <br />
-                    <input
+                    <input id="roomCode"
                         type="text"
                         placeholder="Room Code"
                         value={this.state.roomCode}
-                        onChange={e => this.setState({ roomCode: e.target.value })}
+                        onChange={e => this.setState({ roomCode: e.target.value.toUpperCase() })}
                     />
                     <br />
                     {
