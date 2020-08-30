@@ -44,14 +44,20 @@ class GameScreen extends Component {
             spriteDanToss: SpriteDanToss,
             spriteDanHit: SpriteDanHit,
             spriteDanWalk: SpriteDanWalk,
+            spriteDanWin: SpriteDanWin,
+            spriteDanLoss: SpriteDanLoss,
             spriteErnieIdle: SpriteErnieIdle,
             spriteErnieToss: SpriteErnieToss,
             spriteErnieHit: SpriteErnieHit,
             spriteErnieWalk: SpriteErnieWalk,
+            spriteErnieWin: SpriteErnieWin,
+            spriteErnieLoss: SpriteErnieLoss,
             spriteMarkIdle: SpriteMarkIdle,
             spriteMarkToss: SpriteMarkToss,
             spriteMarkHit: SpriteMarkHit,
             spriteMarkWalk: SpriteMarkWalk,
+            spriteMarkWin: SpriteMarkWin,
+            spriteMarkLoss: SpriteMarkLoss
         }, ...Car.GetImagesList()
     };
 
@@ -113,11 +119,11 @@ class GameScreen extends Component {
         const rand = Math.floor(Math.random() * 3)
         switch(rand) {
             case 0:
-                return new CharacterObject(this, id, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, this.images.spriteErnieLoss, this.images.spriteErnieWin, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, this.images.spriteErnieLoss, this.images.spriteErnieWin, new Point(x, y), facing, side, "ernie");
             case 1:
-                return new CharacterObject(this, id, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, this.images.spriteDanLoss, this.images.spriteDanWin, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, this.images.spriteDanLoss, this.images.spriteDanWin, new Point(x, y), facing, side, "dan");
             case 2:
-                return new CharacterObject(this, id, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, this.images.spriteMarkLoss, this.images.spriteMarkWin, new Point(x, y), facing, side);
+                return new CharacterObject(this, id, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, this.images.spriteMarkLoss, this.images.spriteMarkWin, new Point(x, y), facing, side, "mark");
         }
     }
 
@@ -134,11 +140,15 @@ class GameScreen extends Component {
     }
 
     getMyCharacter = () => {
-        if (this.p1.playerId == this.roomState.myPlayerId) {
+        if (!this.roomState) {
+            return null;
+        }
+
+        if (this.p1 && this.p1.playerId === this.roomState.myPlayerId) {
             return this.p1;
         }
 
-        return this.p2;
+        return (this.p2 && this.p2.playerId === this.roomState.myPlayerId) ? this.p2 : null;
     }
 
     getRoomState = () => {
@@ -159,24 +169,38 @@ class GameScreen extends Component {
     }
 
     handleKeyDown = (event) => {
-        if (this.getMyCharacter().curState != "toss") {
-            if (event.keyCode == 65) {
-                this.getMyCharacter().walk(-1);
-            } else if (event.keyCode == 68) {
-                this.getMyCharacter().walk(1);
-            } else if (event.keyCode == 32) {
-                this.getMyCharacter().toss();
+        const c = this.getMyCharacter();
+        if (c && !this.gameOver) {
+            if (this.getMyCharacter().curState !== "toss") {
+                if (event.keyCode === 65) {
+                    this.getMyCharacter().walk(-1);
+                } else if (event.keyCode === 68) {
+                    this.getMyCharacter().walk(1);
+                } else if (event.keyCode === 32) {
+                    this.getMyCharacter().toss();
+                }
+            }
+        }
+
+        if (this.gameOver) {
+            if (event.keyCode === 32) {
+                if (this.props.onGameOver) {
+                    this.props.onGameOver();
+                }
             }
         }
     }
 
     handleKeyUp = (event) => {
-        if (this.getMyCharacter().curState != "toss") {
-            const character = this.getMyCharacter();
-            if (event.keyCode == 65 && character.facing == -1) {
-                this.getMyCharacter().stopWalking();
-            } else if (event.keyCode == 68 && character.facing == 1) {
-                this.getMyCharacter().stopWalking();
+        const c = this.getMyCharacter();
+        if (c) {
+            if (this.getMyCharacter().curState != "toss") {
+                const character = this.getMyCharacter();
+                if (event.keyCode == 65 && character.facing == -1) {
+                    this.getMyCharacter().stopWalking();
+                } else if (event.keyCode == 68 && character.facing == 1) {
+                    this.getMyCharacter().stopWalking();
+                }
             }
         }
     }
@@ -190,6 +214,10 @@ class GameScreen extends Component {
     }
 
     componentWillUnmount = () => {
+        document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener("keyup", this.handleKeyUp);
+        this.props.connection.off("RoomStateGenerated", this.roomStateGenerated);
+        this.props.connection.off("GuestJoinedRoom", this.guestJoined);
         window.cancelAnimationFrame(this.animationFrame);
     }
 
@@ -200,6 +228,15 @@ class GameScreen extends Component {
     tick = () => {
         const tickStartTime = Date.now();
         const elapsedTime = tickStartTime - this.lastTickStart;
+        if (!this.gameOver) {
+            if (this.p1 && this.p1.isDead) {
+                this.p2.win();
+                this.gameOver = true;
+            } else if (this.p2 && this.p2.isDead) {
+                this.p1.win();
+                this.gameOver = true;
+            }
+        }
         this.gameObjects = this.gameObjects.sort((a, b) => a.updateOrder === b.updateOrder ? 0 : (a.updateOrder > b.updateOrder ? 1 : -1));
         for (const i in this.gameObjects) {
             const gameObject = this.gameObjects[i];

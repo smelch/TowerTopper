@@ -12,9 +12,10 @@ class CharacterObject extends AnimateObject {
         this.addSpriteState('hit', 200, 300, 4, 0.5, hit, 'idle');
         this.addSpriteState('walk', 200, 300, 4, 0.5, walk, 'walk');
 
+        this.isDead = false;
         //Character specific people
-        const lossFrames = 0;
-        const winFrames = 0;
+        let lossFrames = 0;
+        let winFrames = 0;
         switch (characterKey) {
             case "ernie":
                 lossFrames = 7;
@@ -111,11 +112,11 @@ class CharacterObject extends AnimateObject {
     }
 
     update(elapsedTime) {
-        if (this.gameOver) {
+        if (this.game.gameOver) {
             return;
         }
 
-        if (this.isTossing && this.frameSteps == 7) {
+        if (this.isTossing && this.frameSteps === 7) {
             Car.GenerateCar(this.game, this);
             this.isTossing = false
         }
