@@ -29,6 +29,7 @@ namespace TowerTopper.Application.Rooms
                 {
                     MyPlayerId = command.PlayerId,
                     RoomCode = room.RoomCode.ToString(),
+                    Status = room.Status.ToString(),
                     Guest = Convert(room.Guest),
                     Host = Convert(room.Host)
                 });

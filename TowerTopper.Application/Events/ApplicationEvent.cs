@@ -24,7 +24,8 @@ namespace TowerTopper.Application.Events
             {
                 RoomId = @event.RoomId.ToString(),
                 PlayerId = @event.PlayerId.ToString(),
-                UserName = @event.UserName
+                UserName = @event.UserName,
+                CharacterKey = @event.CharacterKey.ToString()
             };
         }
     }

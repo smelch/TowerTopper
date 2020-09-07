@@ -78,9 +78,7 @@ class GameScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imagesLoaded: false,
-            hostName: '',
-            guestName: ''
+            imagesLoaded: false
         };
         this.roomCode = props.roomCode
     }
@@ -95,7 +93,7 @@ class GameScreen extends Component {
 
         this.music.background.volume = 0.1;
         this.music.background.loop = true;
-        this.music.background.play();
+        //this.music.background.play();
 
         Car.SetImagesList(images);
         CharacterObject.SetSoundList(sounds);
@@ -112,31 +110,34 @@ class GameScreen extends Component {
     guestJoined = (message) => {
         console.log(message);
         this.roomState.guest = message;
-        this.p2 = this.getRandomChar(this.roomState.guest.playerId, 490, 205, -1, 2);
+        console.log(message);
+        this.p2 = this.getCharacter(this.roomState.guest.playerId, 490, 205, -1, 2, this.roomState.guest.characterKey);
         // this.setState({ guestName: this.roomState.guest.userName });
     }
 
-    getRandomChar = (id, x, y, facing, side) => {
-        const rand = Math.floor(Math.random() * 3)
-        switch(rand) {
-            case 0:
-                return new CharacterObject(this, id, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, this.images.spriteErnieLoss, this.images.spriteErnieWin, new Point(x, y), facing, side, "ernie");
-            case 1:
-                return new CharacterObject(this, id, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, this.images.spriteDanLoss, this.images.spriteDanWin, new Point(x, y), facing, side, "dan");
-            case 2:
-                return new CharacterObject(this, id, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, this.images.spriteMarkLoss, this.images.spriteMarkWin, new Point(x, y), facing, side, "mark");
+    getCharacter = (id, x, y, facing, side, character) => {
+        switch(character) {
+            case "ernie":
+                return new CharacterObject(this, id, this.images.spriteErnieIdle, this.images.spriteErnieToss, this.images.spriteErnieHit, this.images.spriteErnieWalk, this.images.spriteErnieLoss, this.images.spriteErnieWin, new Point(x, y), facing, side, character);
+            case "dan":
+                return new CharacterObject(this, id, this.images.spriteDanIdle, this.images.spriteDanToss, this.images.spriteDanHit, this.images.spriteDanWalk, this.images.spriteDanLoss, this.images.spriteDanWin, new Point(x, y), facing, side, character);
+            case "mark":
+                return new CharacterObject(this, id, this.images.spriteMarkIdle, this.images.spriteMarkToss, this.images.spriteMarkHit, this.images.spriteMarkWalk, this.images.spriteMarkLoss, this.images.spriteMarkWin, new Point(x, y), facing, side, character);
         }
     }
 
     roomStateGenerated = (message) => {
+        console.log(message);
         this.roomState = message;
         
-        this.p1 = this.getRandomChar(this.roomState.host.playerId, 30, 205, 1, 1);
+        this.p1 = this.getCharacter(this.roomState.host.playerId, 30, 205, 1, 1, message.host.characterKey);
         // this.setState({ hostName: this.roomState.host.userName });
 
         if (this.roomState.guest) {
-            this.p2 = this.getRandomChar(this.roomState.guest.playerId, 490, 205, -1, 2);
-            // this.setState({ guestName: this.roomState.guest.userName });
+            this.p2 = this.getCharacter(this.roomState.guest.playerId, 490, 205, -1, 2, message.guest.characterKey);
+            if (this.roomState.guest.playerId === this.roomState.guest.myPlayerId) {
+                this.props.connection.send("StartGame", this.roomState.roomId)
+            }
         }
     }
 
@@ -169,9 +170,18 @@ class GameScreen extends Component {
         object.destroy()
     }
 
+    latencyCheck = (event) => {
+        this.props.connection.send("LatencyResponse", event.timeStamp);
+    }
+
+    latencyResult = (event) => {
+        this.roomState.guest.latency = event.guestLatency;
+        this.roomState.host.latency = event.hostLatency;
+    }
+
     handleKeyDown = (event) => {
         const c = this.getMyCharacter();
-        if (c && !this.gameOver) {
+        if (c && this.roomState.status !== "over" && this.roomState.status !== "starting") {
             if (this.getMyCharacter().curState !== "toss") {
                 if (event.keyCode === 65) {
                     this.getMyCharacter().walk(-1);
@@ -183,7 +193,7 @@ class GameScreen extends Component {
             }
         }
 
-        if (this.gameOver) {
+        if (c && this.roomState.status === "over") {
             if (event.keyCode === 32) {
                 if (this.props.onGameOver) {
                     this.props.onGameOver();
@@ -207,11 +217,13 @@ class GameScreen extends Component {
     }
 
     componentDidMount = () => {
+        this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
+        this.props.connection.on("GuestJoinedRoom", this.guestJoined);
+        this.props.connection.on("LatencyCheck", this.latencyCheck);
+
         document.addEventListener("keydown", this.handleKeyDown);
         document.addEventListener("keyup", this.handleKeyUp);
         this.gameObjects.push(new GameHeader(this, { x: 0, y: 0 }, { stateSource: this }));
-        this.props.connection.on("RoomStateGenerated", this.roomStateGenerated);
-        this.props.connection.on("GuestJoinedRoom", this.guestJoined);
     }
 
     componentWillUnmount = () => {
@@ -219,6 +231,7 @@ class GameScreen extends Component {
         document.removeEventListener("keyup", this.handleKeyUp);
         this.props.connection.off("RoomStateGenerated", this.roomStateGenerated);
         this.props.connection.off("GuestJoinedRoom", this.guestJoined);
+        this.props.connection.off("LatencyCheck", this.latencyCheck);
         window.cancelAnimationFrame(this.animationFrame);
     }
 
@@ -229,15 +242,17 @@ class GameScreen extends Component {
     tick = () => {
         const tickStartTime = Date.now();
         const elapsedTime = tickStartTime - this.lastTickStart;
-        if (!this.gameOver) {
+
+        if (this.roomState && this.roomState.status != "over") {
             if (this.p1 && this.p1.isDead) {
                 this.p2.win();
-                this.gameOver = true;
+                this.roomState.status = "over";
             } else if (this.p2 && this.p2.isDead) {
                 this.p1.win();
-                this.gameOver = true;
+                this.roomState.status = "over";
             }
         }
+
         this.gameObjects = this.gameObjects.sort((a, b) => a.updateOrder === b.updateOrder ? 0 : (a.updateOrder > b.updateOrder ? 1 : -1));
         for (const i in this.gameObjects) {
             const gameObject = this.gameObjects[i];
@@ -262,11 +277,6 @@ class GameScreen extends Component {
         }
         this.lastTickStart = tickStartTime;
 
-        this.draw(ctx);
-    }
-
-    draw = (ctx) => {
-        
         this.animationFrame = window.requestAnimationFrame(this.tick);
     }
 

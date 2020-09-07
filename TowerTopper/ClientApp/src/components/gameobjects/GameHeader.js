@@ -23,21 +23,29 @@ class GameHeader extends GameObject {
         const roomState = this.stateSource.getRoomState();
         if (roomState) {
             ctx.font = "24pt sans-serif"
-            // ctx.fillText("ROOM CODE: " + roomState.roomCode, 20, 340);
-
             ctx.save();
             ctx.fillStyle = (roomState.host.playerId === roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;
             ctx.fillText(roomState.host.userName, 50, 50);
             ctx.strokeText(roomState.host.userName, 50, 50);
             ctx.restore();
 
-            if (roomState.guest) {
-                ctx.save();
-                ctx.fillStyle = (roomState.guest.playerId === roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;
-                const size = ctx.measureText(roomState.guest.userName);
-                ctx.fillText(roomState.guest.userName, 590 - size.width, 50);
-                ctx.strokeText(roomState.guest.userName, 590 - size.width, 50);
-                ctx.restore();
+            const name = (roomState.guest) ? roomState.guest.userName : "Waiting...";
+            const size = ctx.measureText(name);            
+            ctx.save();
+            ctx.fillStyle = (roomState.host.playerId !== roomState.myPlayerId) ? this.myPlayerFillStyle : this.otherPlayerFillStyle;
+            ctx.fillText(name, 590 - size.width, 50);
+            ctx.strokeText(name, 590 - size.width, 50);
+            ctx.restore();
+
+            switch (roomState.status) {
+                case "waiting":
+                    break;
+                case "starting":
+                    break;
+                case "started":
+                    break;
+                case "over":
+                    break;
             }
         }
     }

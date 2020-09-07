@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
+using TowerTopper.Domain.Characters;
 using TowerTopper.Domain.Players;
 using TowerTopper.Domain.Rooms;
 
@@ -23,8 +24,9 @@ namespace TowerTopper.Application.Rooms
         public async Task Handle(CreateRoom command)
         {
             Room room;
+            var playerId = new PlayerId(command.HostPlayerId);
             do {
-                room = Room.CreateRoom(new PlayerId(command.HostPlayerId), command.HostPlayerName);
+                room = Room.CreateRoom(playerId, command.HostPlayerName, CharacterKey.Parse(command.SelectedCharacter));
             }
             while (!(await _persister.TryStore(room)));
 

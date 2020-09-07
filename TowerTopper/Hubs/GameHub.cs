@@ -19,11 +19,11 @@ namespace TowerTopper.Hubs
             _commandBroker = commandBroker;
         }
 
-        public Task CreateRoom(string userName) =>
-            _commandBroker.Execute(new CreateRoom() { HostPlayerName = userName, HostPlayerId = Context.ConnectionId });
+        public Task CreateRoom(string userName, string selectedCharacter) =>
+            _commandBroker.Execute(new CreateRoom() { HostPlayerName = userName, HostPlayerId = Context.ConnectionId, SelectedCharacter = selectedCharacter });
 
-        public Task JoinRoom(string userName, string roomCode) =>
-            _commandBroker.Execute(new JoinRoom() { UserName = userName, RoomCode = roomCode.ToUpper(), PlayerId = Context.ConnectionId });
+        public Task JoinRoom(string userName, string roomCode, string selectedCharacter) =>
+            _commandBroker.Execute(new JoinRoom() { UserName = userName, RoomCode = roomCode.ToUpper(), PlayerId = Context.ConnectionId, SelectedCharacter = selectedCharacter });
 
         public Task PickCharacter(string roomId, string character) =>
             _commandBroker.Execute(new PickCharacter() { RoomId = roomId, Character = character, PlayerId = Context.ConnectionId });

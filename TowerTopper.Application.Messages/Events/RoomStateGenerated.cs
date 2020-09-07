@@ -9,6 +9,7 @@ namespace TowerTopper.Application.Messages.Events
     {
         public string MyPlayerId { get; set; }
         public string RoomCode { get; set; }
+        public string Status { get; set; }
         public RoomPlayer Host { get; set; }
         public RoomPlayer Guest { get; set; }
 

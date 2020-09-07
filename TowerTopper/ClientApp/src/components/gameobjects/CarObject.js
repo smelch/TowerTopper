@@ -29,7 +29,7 @@ class Car extends AnimateObject {
         super.changeState('flying');
         this.collider = new Collider({
             onCollision: (collider) => this.onCollision(collider),
-            bounds: new Rectangle(20, 35, 120, 50)
+            bounds: new Rectangle(40, 40, 80, 40)
         });
         super.addBehavior(this.collider);
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TowerTopper.Application.Events;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Events;
+using TowerTopper.Domain.Games;
 using TowerTopper.Domain.Rooms;
 
 namespace TowerTopper.Hubs
@@ -13,7 +14,8 @@ namespace TowerTopper.Hubs
     public class GameHubNotifier :
         IEventHandler<RoomCreatedEvent>,
         IEventHandler<GuestJoinedRoomEvent>,
-        IEventHandler<RoomStateGenerated>
+        IEventHandler<RoomStateGenerated>,
+        IEventHandler<GameStartedEvent>
     {
         private readonly IHubContext<GameHub> _gameHubContext;
 
@@ -26,6 +28,7 @@ namespace TowerTopper.Hubs
         {
             await _gameHubContext.Groups.AddToGroupAsync(@event.HostPlayerId.ToString(), @event.RoomId.ToString());
             await _gameHubContext.Clients.Client(@event.HostPlayerId.ToString())?.SendAsync("RoomCreated", ApplicationEvent.FromDomainEvent(@event));
+            await _gameHubContext.Clients.Client(@event.HostPlayerId.ToString())?.SendAsync("LatencyCheck", new { TimeStamp = DateTime.UtcNow.Ticks });
         }
 
         public async Task Handle(GuestJoinedRoomEvent @event)
@@ -37,6 +40,11 @@ namespace TowerTopper.Hubs
         public Task Handle(RoomStateGenerated @event)
         {
             return _gameHubContext.Clients.Client(@event.MyPlayerId).SendAsync("RoomStateGenerated", @event);
+        }
+
+        public Task Handle(GameStartedEvent @event)
+        {
+            return Task.CompletedTask;
         }
     }
 }

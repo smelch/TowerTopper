@@ -41,10 +41,12 @@ code {
   display: block;
   text-align: center;
 }
+#login > * {
+    margin: 5px;
+}
 
 #roomCode {
   margin: 5px;
-  text-transform: uppercase;
 }
 
 #game {

@@ -8,5 +8,6 @@ namespace TowerTopper.Application.Messages.Commands
     {
         public string HostPlayerName { get; set; }
         public string HostPlayerId { get; set; }
+        public string SelectedCharacter { get; set; }
     }
 }

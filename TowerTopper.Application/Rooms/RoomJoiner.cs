@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TowerTopper.Application.Mediator;
 using TowerTopper.Application.Messages.Commands;
 using TowerTopper.Application.Messages.Events;
+using TowerTopper.Domain.Characters;
 using TowerTopper.Domain.Players;
 using TowerTopper.Domain.Rooms;
 
@@ -39,7 +40,7 @@ namespace TowerTopper.Application.Rooms
                     });
                 } else
                 {
-                    room.AddGuest(new PlayerId(command.PlayerId), command.UserName);
+                    room.AddGuest(new PlayerId(command.PlayerId), command.UserName, CharacterKey.Parse(command.SelectedCharacter));
                     await _persister.TryStore(room);
                     await _eventHub.DispatchAll(room);
                 }

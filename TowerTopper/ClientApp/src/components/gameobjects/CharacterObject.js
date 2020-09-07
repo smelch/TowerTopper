@@ -6,6 +6,7 @@ import { Rectangle } from './Coordinates';
 class CharacterObject extends AnimateObject {
     constructor(game, playerId, idle, toss, hit, walk, loss, win, position, facing, playSide, characterKey) {
         super(game, 6, true, position, facing);
+        console.log(loss);
         this.game = game;
         this.addSpriteState('idle', 200, 300, 8, 0.5, idle, 'idle');
         this.addSpriteState('toss', 200, 300, 14, 0.5, toss, 'idle');
@@ -26,7 +27,7 @@ class CharacterObject extends AnimateObject {
                 winFrames = 5;
                 break;
             case "mark":
-                loss = 4;
+                lossFrames = 4;
                 winFrames = 10;
         }
 
@@ -41,7 +42,7 @@ class CharacterObject extends AnimateObject {
         super.addTag("character");
         super.addBehavior(new Collider({
             onCollision: (collider) => this.onCollision(collider),
-            bounds: new Rectangle(25,40,60,75)
+            bounds: new Rectangle(30,50,50,70)
         }));
 
         this.isTossing = false

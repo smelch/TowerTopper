@@ -37,7 +37,8 @@ class AnimateObject extends GameObject {
         if ((Date.now() - this.lastFrameUpdate) / 20 > this.tickThresh) {
             this.frameSteps = (this.frameSteps + 1);
             if (this.frameSteps >= this.states[this.curState].numFrames) {
-                this.frameSteps = this.frameSteps % this.states[this.curState].numFrames;
+                this.curState = this.states[this.curState].post;
+                this.frameSteps = 0;
                 if (this.onAnimationEnd) {
                     this.onAnimationEnd();
                 }
@@ -57,10 +58,6 @@ class AnimateObject extends GameObject {
             (this.states[this.curState].frameWidth * 0.5), 
             (this.states[this.curState].frameHeight * 0.5))
         ctx.restore();
-        if (this.frameSteps == this.states[this.curState].numFrames - 1) {
-            this.curState = this.states[this.curState].post
-            this.frameSteps = 0
-        }
     };
 };
 
